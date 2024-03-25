@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2l11h5q5p3ht"]
+
+[ext_resource type="PackedScene" uid="uid://csgpx107ghhr3" path="res://scenes/SDD/SDD.tscn" id="1_68jxb"]
+[ext_resource type="Texture2D" uid="uid://cnkn8iathytad" path="res://assets/board2.png" id="1_um2dy"]
+[ext_resource type="PackedScene" uid="uid://btaotlx7hckqt" path="res://scenes/Hand/Hand.tscn" id="3_w2uni"]
+
+[sub_resource type="Environment" id="Environment_dbs6r"]
+background_mode = 3
+glow_enabled = true
+glow_normalized = true
+glow_blend_mode = 1
+glow_hdr_threshold = 1.1
+
+[node name="Board" type="Node2D"]
+
+[node name="BoardSprite" type="Sprite2D" parent="."]
+texture_repeat = 2
+position = Vector2(240, 180)
+texture = ExtResource("1_um2dy")
+
+[node name="AnimatedSprite2D" parent="." instance=ExtResource("1_68jxb")]
+texture_repeat = 2
+position = Vector2(462, 30)
+speed_scale = 5.0
+
+[node name="AnimatedSprite2D2" parent="." instance=ExtResource("1_68jxb")]
+position = Vector2(446, 30)
+speed_scale = 5.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dbs6r")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+editor_draw_limits = true
+
+[node name="Hand" parent="." instance=ExtResource("3_w2uni")]
