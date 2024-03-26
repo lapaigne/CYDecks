@@ -1,17 +1,17 @@
 using System;
-using System.Drawing;
 using Godot;
 
 public partial class ClickableArea : Area2D
 {
+    [Export]
+    public bool isOpen = true;
+    
     AnimatedSprite2D mainSprite;
-    public bool hasMouse { get; set; }
-    bool isOpen;
+    bool hasMouse;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        isOpen = true;
         hasMouse = false;
         mainSprite = GetNode<AnimatedSprite2D>("MainSprite");
 

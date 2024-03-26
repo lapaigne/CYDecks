@@ -1,24 +1,33 @@
 using System;
 using Godot;
 
-public partial class SDD : AnimatedSprite2D
+public partial class SDD : Node2D
 {
-    bool isHidden;
+    [Export]
+    public bool isHidden = false;
+    [Export]
+    public byte NumericalValue = 0;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        isHidden = true; // get data from server
+        var left = GetNode<AnimatedSprite2D>("Left");
+        var right = GetNode<AnimatedSprite2D>("Right");
+         // get data from server and set value/idle
 
         if (isHidden)
         {
-            Animation = "idle";
-            Play();
+            left.Animation = "idle";
+            right.Animation = "idle";
+            left.Play();
+            right.Play();
         }
         else
         {
-            Animation = "display";
-            Frame = 8;
+            left.Animation = "display";
+            left.Frame = NumericalValue / 10 % 10;
+            right.Animation = "display";
+            right.Frame = NumericalValue % 10;
         }
     }
 

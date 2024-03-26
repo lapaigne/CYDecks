@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwpuwn7hw4a2n"]
+
+[ext_resource type="PackedScene" uid="uid://btfqc7dfaa3db" path="res://scenes/ClickableArea/ClickableArea.tscn" id="1_0ckni"]
+
+[node name="Table" type="Node2D"]
+position = Vector2(164, 109)
+
+[node name="Area2D" parent="." instance=ExtResource("1_0ckni")]
+position = Vector2(0, 77)
+
+[node name="Area2D2" parent="." instance=ExtResource("1_0ckni")]
+position = Vector2(40, 77)
+
+[node name="Area2D3" parent="." instance=ExtResource("1_0ckni")]
+position = Vector2(80, 77)
+
+[node name="Area2D4" parent="." instance=ExtResource("1_0ckni")]
+position = Vector2(120, 77)

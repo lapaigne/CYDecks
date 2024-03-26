@@ -149,7 +149,15 @@ animations = [{
 "speed": 7.0
 }]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+[node name="Node2D" type="Node2D"]
+script = ExtResource("2_ggrym")
+
+[node name="Left" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, 16)
 sprite_frames = SubResource("SpriteFrames_2njc4")
 animation = &"idle"
-script = ExtResource("2_ggrym")
+
+[node name="Right" type="AnimatedSprite2D" parent="."]
+position = Vector2(24, 16)
+sprite_frames = SubResource("SpriteFrames_2njc4")
+animation = &"idle"
