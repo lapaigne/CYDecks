@@ -5,7 +5,13 @@ public partial class Card : Area2D
 {
     [Export]
     public bool isOpen = true;
-    
+
+    [Export]
+    public bool canSlide = false;
+
+    [Export]
+    public bool canClick = true;
+
     AnimatedSprite2D mainSprite;
     bool hasMouse;
 
@@ -26,20 +32,29 @@ public partial class Card : Area2D
 
     public void OnMouseEntered()
     {
-        // unreliable
+        // slide back every but this card; unreliable
+        // card won't slide up if cursor was in the area2d
 
-        // var siblings = GetParent().GetChildren();
+        var siblings = GetParent().GetChildren();
 
-        // foreach (var s in siblings)
-        // {
-        //     if (s is ClickableArea && s.GetIndex() != GetIndex()){
-        //         ((ClickableArea)s).OnMouseExited();
-        //     }
-        // }
+        foreach (var s in siblings)
+        {
+            if (s is Card && s.GetIndex() != GetIndex())
+            {
+                ((Card)s).OnMouseExited();
+            }
+        }
+
+        //
+
+        if (canClick)
+        {
+            if (Input.IsActionJustPressed("click")) { }
+        }
 
         if (isOpen)
         {
-            if (!hasMouse)
+            if (!hasMouse && canSlide)
             {
                 mainSprite.Position += 10 * Vector2.Up;
                 hasMouse = true;
@@ -51,11 +66,18 @@ public partial class Card : Area2D
     {
         if (isOpen)
         {
-            if (hasMouse)
+            if (hasMouse && canSlide)
             {
                 mainSprite.Position += 10 * Vector2.Down;
                 hasMouse = false;
             }
         }
+    }
+
+    public void OnClick()
+    {
+        // get free positions from table
+        
+        
     }
 }

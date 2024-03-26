@@ -1,9 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2l11h5q5p3ht"]
+[gd_scene load_steps=3 format=3 uid="uid://c2l11h5q5p3ht"]
 
 [ext_resource type="PackedScene" uid="uid://csgpx107ghhr3" path="res://scenes/SDD/SDD.tscn" id="1_68jxb"]
 [ext_resource type="Texture2D" uid="uid://cnkn8iathytad" path="res://assets/board2.png" id="1_um2dy"]
-[ext_resource type="PackedScene" uid="uid://btaotlx7hckqt" path="res://scenes/Hand/Hand.tscn" id="3_w2uni"]
-[ext_resource type="PackedScene" uid="uid://bwpuwn7hw4a2n" path="res://scenes/Table/Table.tscn" id="4_leq0b"]
 
 [node name="Board" type="Node2D"]
 
@@ -20,7 +18,3 @@ NumericalValue = 41
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 editor_draw_limits = true
-
-[node name="Hand" parent="." instance=ExtResource("3_w2uni")]
-
-[node name="Table" parent="." instance=ExtResource("4_leq0b")]
