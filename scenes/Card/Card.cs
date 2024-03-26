@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-public partial class ClickableArea : Area2D
+public partial class Card : Area2D
 {
     [Export]
     public bool isOpen = true;

@@ -13,6 +13,7 @@ config_version=5
 config/name="CYDecks"
 run/main_scene="res://scenes/Board/Board.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
+config/icon="res://assets/bankcard.png"
 
 [display]
 
@@ -31,5 +32,6 @@ project/assembly_name="CYDecks"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 viewport/hdr_2d=true
