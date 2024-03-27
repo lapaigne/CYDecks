@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://5xuo36m5m3yl"]
+
+[ext_resource type="Script" path="res://scripts/CardData.cs" id="1_d02mn"]
+
+[resource]
+script = ExtResource("1_d02mn")
+Id = 0
+noEffect = true
+Health = 0
+Shield = 0
+Damage = 0
+Money = 0

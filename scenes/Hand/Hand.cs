@@ -7,13 +7,13 @@ public partial class Hand : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        PackedScene card = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
+        PackedScene card = GD.Load<PackedScene>("res://scenes/Card/CardOld.tscn");
 
         // get data from db
 
         for (int i = 0; i < 10; i++)
         {
-            var instance = (Card)card.Instantiate();
+            var instance = (CardOld)card.Instantiate();
             // AddChild(instance);
         }
     }
