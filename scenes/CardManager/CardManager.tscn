@@ -1,12 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://11oj1tawurep"]
+[gd_scene load_steps=5 format=3 uid="uid://11oj1tawurep"]
 
-[ext_resource type="PackedScene" uid="uid://btaotlx7hckqt" path="res://scenes/Hand/Hand.tscn" id="1_jscbj"]
 [ext_resource type="Script" path="res://scenes/CardManager/CardManager.cs" id="1_va62f"]
-[ext_resource type="PackedScene" uid="uid://bwpuwn7hw4a2n" path="res://scenes/Table/Table.tscn" id="2_k4ulm"]
+[ext_resource type="PackedScene" uid="uid://ptws4j4qklxa" path="res://scenes/Card/Card.tscn" id="2_gri05"]
+[ext_resource type="Script" path="res://scripts/CardData.cs" id="3_6hkeh"]
+
+[sub_resource type="Resource" id="Resource_kkr8f"]
+script = ExtResource("3_6hkeh")
+Id = 0
+noEffect = true
+Health = 0
+Shield = 0
+Damage = 0
+Money = 0
 
 [node name="CardManager" type="Node2D"]
 script = ExtResource("1_va62f")
 
-[node name="Hand" parent="." instance=ExtResource("1_jscbj")]
-
-[node name="Table" parent="." instance=ExtResource("2_k4ulm")]
+[node name="Card" parent="." instance=ExtResource("2_gri05")]
+Data = SubResource("Resource_kkr8f")

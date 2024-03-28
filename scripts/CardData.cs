@@ -27,8 +27,13 @@ public partial class CardData : Resource
         Id = 0;
     }
 
-    public void TriggerEffect() { 
-        GD.Print($"Effect of card with {Id} was activated");
+    public CardData(int id)
+    {
+        Id = id;
+    }
 
+    public void TriggerEffect()
+    {
+        GD.Print($"Effect of card with id={Id} was activated");
     }
 }
