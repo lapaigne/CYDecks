@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+// better off instantiate all cards instead
+// queues and stacks make things overcomplicated
+
+
 public partial class CardManager : Node2D
 {
     public List<Card> Shop;
-
-    public Stack<Card> DestroyedPile;
-
-    public PlayerDeckSlots[] Players;
+    public PlayerPiles[] Players;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -22,7 +23,7 @@ public partial class CardManager : Node2D
         drawQueue.Enqueue(new Card { Data = new CardData(2), State = CardState.Draw });
         drawQueue.Enqueue(new Card { Data = new CardData(18), State = CardState.Draw });
 
-        Players = new PlayerDeckSlots[] { new PlayerDeckSlots { DrawPile = drawQueue } };
+        Players = new PlayerPiles[] { new PlayerPiles { DrawPile = drawQueue } };
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

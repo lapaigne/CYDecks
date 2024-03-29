@@ -24,6 +24,7 @@ public partial class Card : Node2D
     public Node2D Master;
 
     private bool isHovered;
+    private bool isMoving;
 
     private PackedScene cardScene;
 
@@ -43,7 +44,21 @@ public partial class Card : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        if (isHovered)
+        if (isMoving)
+        {
+            var targetPosition = new Vector2(164, 186);
+            var velocity = (targetPosition - GlobalPosition).Normalized() * 128;
+            if (targetPosition.DistanceTo(GlobalPosition) > 2)
+            {
+                Translate((float)delta * velocity);
+            }
+            else
+            {
+                GlobalPosition = targetPosition;
+                isMoving = false;
+            }
+        }
+        else if (isHovered)
         {
             if (Input.IsActionJustPressed("click"))
             {
@@ -53,8 +68,9 @@ public partial class Card : Node2D
                 {
                     GD.Print("clicked");
 
-                    GlobalPosition = new Vector2(164, 186);
+                    isMoving = true;
                     State = CardState.Hand;
+                    ZIndex++;
 
                     var instance = (Card)cardScene.Instantiate();
                     var card = parent.Players[0].DrawPile.Dequeue();
