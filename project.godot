@@ -29,6 +29,10 @@ window/canvas_textures/default_texture_filter=0
 
 project/assembly_name="CYDecks"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 click={

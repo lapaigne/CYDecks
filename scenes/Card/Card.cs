@@ -27,6 +27,10 @@ public partial class Card : Node2D
     private bool isMoving;
 
     private PackedScene cardScene;
+    private Vector2 targetPosition;
+    private bool targetSelected;
+    private double timeEnRoute;
+    private Vector2 velocity;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -42,19 +46,55 @@ public partial class Card : Node2D
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (isMoving)
         {
-            var targetPosition = new Vector2(164, 186);
-            var velocity = (targetPosition - GlobalPosition).Normalized() * 128;
-            if (targetPosition.DistanceTo(GlobalPosition) > 2)
+            timeEnRoute += delta;
+            if (!targetSelected)
             {
-                Translate((float)delta * velocity);
+                switch (State)
+                {
+                    case CardState.Hand:
+                        var draw = GetParent<CardManager>().PlayerHand;
+                        for (int i = 0; i < draw.Length; i++)
+                        {
+                            if (!draw[i].isOccupied)
+                            {
+                                targetPosition = draw[i].Position;
+                                draw[i].isOccupied = true;
+                                break;
+                            }
+                        }
+                        break;
+                    case CardState.Play:
+                        var play = GetParent<CardManager>().PlayerPlay;
+                        for (int i = 0; i < play.Length; i++)
+                        {
+                            if (!play[i].isOccupied)
+                            {
+                                targetPosition = play[i].Position;
+                                play[i].isOccupied = true;
+                                break;
+                            }
+                        }
+                        break;
+                }
+                targetSelected = true;
+                velocity = targetPosition - GlobalPosition;
+            }
+
+            // GD.Print(targetSelected);
+            var distance = targetPosition.DistanceTo(GlobalPosition);
+            // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
+            if (distance > 2 && timeEnRoute <= 0.4)
+            {
+                Translate(velocity * (float)delta / 0.4f);
             }
             else
             {
                 GlobalPosition = targetPosition;
+                targetSelected = false;
                 isMoving = false;
             }
         }
@@ -66,7 +106,7 @@ public partial class Card : Node2D
                 var parent = GetParent<CardManager>();
                 if (State == CardState.Draw)
                 {
-                    GD.Print("clicked");
+                    // GD.Print("clicked");
 
                     isMoving = true;
                     State = CardState.Hand;
@@ -77,6 +117,7 @@ public partial class Card : Node2D
 
                     instance.Data = card.Data;
                     instance.State = CardState.Draw;
+                    instance.GlobalPosition = GlobalPosition;
 
                     parent.AddChild(instance);
                 }
@@ -99,13 +140,13 @@ public partial class Card : Node2D
 
     public void OnMouseEntered()
     {
-        GD.Print("entered");
+        // GD.Print("entered");
         isHovered = true;
     }
 
     public void OnMouseExited()
     {
-        GD.Print("exited");
+        // GD.Print("exited");
         isHovered = false;
     }
 }

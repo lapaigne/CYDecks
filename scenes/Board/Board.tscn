@@ -21,4 +21,3 @@ anchor_mode = 0
 editor_draw_limits = true
 
 [node name="CardManager" parent="." instance=ExtResource("3_x2g6t")]
-position = Vector2(86, 186)
