@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Godot;
 
 public enum CardState
@@ -25,12 +27,12 @@ public partial class Card : Node2D
 
     private bool isHovered;
     private bool isMoving;
-
     private PackedScene cardScene;
     private Vector2 targetPosition;
     private bool targetSelected;
     private double timeEnRoute;
     private Vector2 velocity;
+    private CardSlot slot = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -41,7 +43,7 @@ public partial class Card : Node2D
         {
             var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
             sprite.Frame = Data.Id;
-            Data.TriggerEffect();
+            Data.OnPlayEffect();
         }
     }
 
@@ -51,92 +53,130 @@ public partial class Card : Node2D
         if (isMoving)
         {
             timeEnRoute += delta;
-            if (!targetSelected)
-            {
-                switch (State)
-                {
-                    case CardState.Hand:
-                        var draw = GetParent<CardManager>().PlayerHand;
-                        for (int i = 0; i < draw.Length; i++)
-                        {
-                            if (!draw[i].isOccupied)
-                            {
-                                targetPosition = draw[i].Position;
-                                draw[i].isOccupied = true;
-                                break;
-                            }
-                        }
-                        break;
-                    case CardState.Play:
-                        var play = GetParent<CardManager>().PlayerPlay;
-                        for (int i = 0; i < play.Length; i++)
-                        {
-                            if (!play[i].isOccupied)
-                            {
-                                targetPosition = play[i].Position;
-                                play[i].isOccupied = true;
-                                break;
-                            }
-                        }
-                        break;
-                }
-                targetSelected = true;
-                velocity = targetPosition - GlobalPosition;
-            }
+            SelectNewPosition();
 
-            // GD.Print(targetSelected);
-            var distance = targetPosition.DistanceTo(GlobalPosition);
-            // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
-            if (distance > 2 && timeEnRoute <= 0.4)
+            if (slot != null)
             {
-                Translate(velocity * (float)delta / 0.4f);
-            }
-            else
-            {
-                GlobalPosition = targetPosition;
-                targetSelected = false;
-                isMoving = false;
+                // GD.Print(targetSelected);
+                var distance = slot.Position.DistanceTo(GlobalPosition);
+                // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
+                if (distance > 2 && timeEnRoute <= 0.2)
+                {
+                    Translate(velocity * (float)delta / 0.2f);
+                }
+                else
+                {
+                    GlobalPosition = slot.Position;
+                    targetSelected = false;
+                    isMoving = false;
+                    timeEnRoute = 0;
+                }
             }
         }
         else if (isHovered)
         {
             if (Input.IsActionJustPressed("click"))
             {
-                isHovered = false;
-                var parent = GetParent<CardManager>();
-                if (State == CardState.Draw)
-                {
-                    // GD.Print("clicked");
-
-                    isMoving = true;
-                    State = CardState.Hand;
-                    ZIndex++;
-
-                    var instance = (Card)cardScene.Instantiate();
-                    var card = parent.Players[0].DrawPile.Dequeue();
-
-                    instance.Data = card.Data;
-                    instance.State = CardState.Draw;
-                    instance.GlobalPosition = GlobalPosition;
-
-                    parent.AddChild(instance);
-                }
-                else if (State == CardState.Hand)
-                {
-                    Data.TriggerEffect();
-                }
+                ChangeState();
             }
         }
     }
 
-    // public void ChangeState(CardState state)
-    // {
-    //     switch (state)
-    //     {
-    //         default:
-    //             return;
-    //     }
-    // }
+    public void SelectNewPosition()
+    {
+        if (!targetSelected)
+        {
+            var parent = GetParent<CardManager>();
+            var slots = parent.Slots;
+            var available = new List<CardSlot>();
+            switch (State)
+            {
+                case CardState.Hand:
+                    available = new List<CardSlot>(
+                        slots.Where(slot => slot.Type == Slot.PlayerHand)
+                    );
+                    break;
+                case CardState.Play:
+                    available = new List<CardSlot>(
+                        slots.Where(slot => slot.Type == Slot.PlayerPlay)
+                    );
+                    break;
+            }
+
+            if (available.Count() > 0)
+            {
+                for (int i = 0; i < available.Count(); i++)
+                {
+                    if (!available[i].isOccupied)
+                    {
+                        available[i].isOccupied = true;
+                        slot = available[i];
+                        ZIndex = i;
+                        break;
+                    }
+                }
+                velocity = slot.Position - GlobalPosition;
+            }
+            else
+            {
+                GD.Print("no free slots were found");
+            }
+            targetSelected = true;
+        }
+    }
+
+    public void ChangeState(bool giveOpponent = false)
+    {
+        isHovered = false;
+        var parent = GetParent<CardManager>();
+        switch (State)
+        {
+            case CardState.Draw:
+                isMoving = true;
+                State = CardState.Hand;
+                ZIndex++;
+
+                var instance = (Card)cardScene.Instantiate();
+                var card = parent.PlayerDraw.Dequeue();
+
+                instance.Data = card.Data;
+                instance.State = CardState.Draw;
+                instance.GlobalPosition = GlobalPosition;
+
+                parent.AddChild(instance);
+                return;
+
+            case CardState.Hand:
+                if (slot != null)
+                {
+                    slot.isOccupied = false;
+                }
+
+                isMoving = true;
+                State = CardState.Play;
+                // Data.OnPlayEffect();
+                return;
+
+            case CardState.Play:
+                isMoving = true;
+                State = CardState.Discard;
+                return;
+
+            case CardState.Discard:
+
+                isMoving = true;
+                State = CardState.Draw;
+                return;
+
+            case CardState.Shop:
+                isMoving = true;
+                State = CardState.Draw;
+                return;
+
+            default:
+                return;
+        }
+    }
 
     public void OnMouseEntered()
     {

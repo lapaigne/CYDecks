@@ -32,8 +32,14 @@ public partial class CardData : Resource
         Id = id;
     }
 
-    public void TriggerEffect()
+    public void OnPlayEffect()
     {
         GD.Print($"Effect of card with id={Id} was activated");
     }
+
+    public void OnClickEffect() { }
+
+    public void OnDiscardEffect() { }
+
+    public void OnDamageTakenEffect() { }
 }
