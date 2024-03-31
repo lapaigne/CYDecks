@@ -25,14 +25,15 @@ public partial class Card : Node2D
     [Export]
     public Node2D Master;
 
+    [Export]
+    public bool CanClick = true;
     private bool isHovered;
     private bool isMoving;
     private PackedScene cardScene;
-    private Vector2 targetPosition;
-    private bool targetSelected;
-    private double timeEnRoute;
-    private Vector2 velocity;
-    private CardSlot slot = null;
+    private bool _targetSelected;
+    private double _timeEnRoute;
+    private Vector2 _velocity;
+    private CardSlot _slot = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -50,26 +51,31 @@ public partial class Card : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta)
     {
+        var siblngs = GetParent<CardManager>().GetChildren().Where(s => s is Card);
         if (isMoving)
         {
-            timeEnRoute += delta;
-            SelectNewPosition();
+            _timeEnRoute += delta;
+            
 
-            if (slot != null)
+            if (_slot != null)
             {
                 // GD.Print(targetSelected);
-                var distance = slot.Position.DistanceTo(GlobalPosition);
+                var distance = _slot.Position.DistanceTo(GlobalPosition);
                 // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
-                if (distance > 2 && timeEnRoute <= 0.2)
+                if (distance > 2 && _timeEnRoute <= 0.2)
                 {
-                    Translate(velocity * (float)delta / 0.2f);
+                    Translate(_velocity * (float)delta / 0.2f);
                 }
                 else
                 {
-                    GlobalPosition = slot.Position;
-                    targetSelected = false;
+                    foreach (Card s in siblngs)
+                    {
+                        s.CanClick = true;
+                    }
+                    GlobalPosition = _slot.Position;
+                    _targetSelected = false;
                     isMoving = false;
-                    timeEnRoute = 0;
+                    _timeEnRoute = 0;
                 }
             }
         }
@@ -77,15 +83,24 @@ public partial class Card : Node2D
         {
             if (Input.IsActionJustPressed("click"))
             {
-                ChangeState();
+                if (CanClick)
+                {
+                    foreach (Card s in siblngs)
+                    {
+                        s.CanClick = false;
+                    }
+                    ChangeState();
+                    TrySelectingNewPosition();
+                }
             }
         }
     }
 
-    public void SelectNewPosition()
+    public void TrySelectingNewPosition()
     {
-        if (!targetSelected)
+        if (!_targetSelected)
         {
+            
             var parent = GetParent<CardManager>();
             var slots = parent.Slots;
             var available = new List<CardSlot>();
@@ -101,6 +116,11 @@ public partial class Card : Node2D
                         slots.Where(slot => slot.Type == Slot.PlayerPlay)
                     );
                     break;
+                case CardState.Discard:
+                    available = new List<CardSlot>(
+                        slots.Where(slots => slots.Type == Slot.PlayerDiscard)
+                    );
+                    break;
             }
 
             if (available.Count() > 0)
@@ -109,22 +129,33 @@ public partial class Card : Node2D
                 {
                     if (!available[i].isOccupied)
                     {
-                        available[i].isOccupied = true;
-                        slot = available[i];
+                        if (State == CardState.Play || State == CardState.Hand)
+                        {
+                            available[i].isOccupied = true;
+                        }
+
+                        _slot = available[i];
                         ZIndex = i;
+                        _targetSelected = true;
+                        _velocity = _slot.Position - GlobalPosition;
+
                         break;
+                        // return true;
                     }
                 }
-                velocity = slot.Position - GlobalPosition;
+                // return false;
             }
             else
             {
                 GD.Print("no free slots were found");
+                // return false;
             }
-            targetSelected = true;
+            
         }
     }
 
+
+    // change state in selection instead
     public void ChangeState(bool giveOpponent = false)
     {
         isHovered = false;
@@ -147,9 +178,9 @@ public partial class Card : Node2D
                 return;
 
             case CardState.Hand:
-                if (slot != null)
+                if (_slot != null)
                 {
-                    slot.isOccupied = false;
+                    _slot.isOccupied = false;
                 }
 
                 isMoving = true;
@@ -158,12 +189,16 @@ public partial class Card : Node2D
                 return;
 
             case CardState.Play:
+                if (_slot != null)
+                {
+                    GD.Print(_slot.Type);
+                    _slot.isOccupied = false;
+                }
                 isMoving = true;
                 State = CardState.Discard;
                 return;
 
             case CardState.Discard:
-
                 isMoving = true;
                 State = CardState.Draw;
                 return;

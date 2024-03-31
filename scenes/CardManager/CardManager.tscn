@@ -22,5 +22,5 @@ position = Vector2(240, 180)
 texture = ExtResource("2_45rwf")
 
 [node name="Card" parent="." instance=ExtResource("2_gri05")]
-position = Vector2(86, 186)
+position = Vector2(6, 246)
 Data = SubResource("Resource_kkr8f")

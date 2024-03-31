@@ -8,15 +8,10 @@ using Godot;
 public partial class CardManager : Node2D
 {
     public List<Card> Shop;
-    public PlayerPiles[] Players;
-
-    public CardSlot[] PlayerPlay;
-    public CardSlot[] PlayerHand;
-    public CardSlot[] OpponentPlay;
-    public CardSlot[] OpponentHand;
     public Queue<Card> PlayerDraw;
     public Queue<Card> OpponentDraw;
     public CardSlot[] Slots;
+    private double _coolDown;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -69,7 +64,7 @@ public partial class CardManager : Node2D
         for (int i = 0; i < 100; i++)
         {
             PlayerDraw.Enqueue(
-                new Card { Data = new CardData(rnd.RandiRange(0, 18)), State = CardState.Draw }
+                new Card { Data = new CardData(rnd.RandiRange(0, 20)), State = CardState.Draw }
             );
         }
 
@@ -78,5 +73,5 @@ public partial class CardManager : Node2D
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta) { }
+    public override void _PhysicsProcess(double delta) { }
 }
