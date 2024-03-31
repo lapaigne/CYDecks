@@ -10,61 +10,60 @@ public partial class CardManager : Node2D
     public List<Card> Shop;
     public Queue<Card> PlayerDraw;
     public Queue<Card> OpponentDraw;
-    public CardSlot[] Slots;
+    public Slot[] Slots;
     private double _coolDown;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Slots = new CardSlot[]
+        Slots = new Slot[]
         {
-            new CardSlot { Position = new Vector2(164, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(184, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(204, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(224, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(244, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(264, 306), Type = Slot.PlayerHand },
-            new CardSlot { Position = new Vector2(284, 306), Type = Slot.PlayerHand },
+            new Slot { Position = new Vector2(164, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(184, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(204, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(224, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(244, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(264, 306), Type = global::Slots.Hand, OwnerId = 0 },
+            new Slot { Position = new Vector2(284, 306), Type = global::Slots.Hand, OwnerId = 0 },
             //
-            new CardSlot { Position = new Vector2(164, 186), Type = Slot.PlayerPlay },
-            new CardSlot { Position = new Vector2(204, 186), Type = Slot.PlayerPlay },
-            new CardSlot { Position = new Vector2(244, 186), Type = Slot.PlayerPlay },
-            new CardSlot { Position = new Vector2(284, 186), Type = Slot.PlayerPlay },
+            new Slot { Position = new Vector2(164, 186), Type = global::Slots.Play, OwnerId = 0 },
+            new Slot { Position = new Vector2(204, 186), Type = global::Slots.Play, OwnerId = 0 },
+            new Slot { Position = new Vector2(244, 186), Type = global::Slots.Play, OwnerId = 0 },
+            new Slot { Position = new Vector2(284, 186), Type = global::Slots.Play, OwnerId = 0 },
             //
-            new CardSlot { Position = new Vector2(86, 186), Type = Slot.PlayerDiscard },
+            new Slot { Position = new Vector2(86, 186), Type = global::Slots.Discard, OwnerId = 0 },
             //
-            new CardSlot { Position = new Vector2(6, 246), Type = Slot.PlayerDraw },
+            new Slot { Position = new Vector2(6, 246), Type = global::Slots.Draw, OwnerId = 0 },
             //
-            new CardSlot { Position = new Vector2(164, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(184, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(204, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(224, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(244, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(264, 6), Type = Slot.OpponentHand },
-            new CardSlot { Position = new Vector2(284, 6), Type = Slot.OpponentHand },
+            new Slot { Position = new Vector2(164, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(184, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(204, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(224, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(244, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(264, 6), Type = global::Slots.Hand, OwnerId = 1 },
+            new Slot { Position = new Vector2(284, 6), Type = global::Slots.Hand, OwnerId = 1 },
             //
-            new CardSlot { Position = new Vector2(164, 126), Type = Slot.OpponentPlay },
-            new CardSlot { Position = new Vector2(204, 126), Type = Slot.OpponentPlay },
-            new CardSlot { Position = new Vector2(244, 126), Type = Slot.OpponentPlay },
-            new CardSlot { Position = new Vector2(284, 126), Type = Slot.OpponentPlay },
+            new Slot { Position = new Vector2(164, 126), Type = global::Slots.Play, OwnerId = 1 },
+            new Slot { Position = new Vector2(204, 126), Type = global::Slots.Play, OwnerId = 1 },
+            new Slot { Position = new Vector2(244, 126), Type = global::Slots.Play, OwnerId = 1 },
+            new Slot { Position = new Vector2(284, 126), Type = global::Slots.Play, OwnerId = 1 },
             //
-            new CardSlot { Position = new Vector2(86, 126), Type = Slot.OpponentDiscard },
+            new Slot { Position = new Vector2(86, 126), Type = global::Slots.Discard, OwnerId = 1 },
             //
-            new CardSlot { Position = new Vector2(6, 66), Type = Slot.OpponentDraw },
+            new Slot { Position = new Vector2(6, 66), Type = global::Slots.Draw, OwnerId = 1 },
             //
-            new CardSlot { Position = new Vector2(344, 156), Type = Slot.Shop },
+            new Slot { Position = new Vector2(344, 156), Type = global::Slots.Shop, OwnerId = -1 },
         };
 
-        // var resource = GD.Load<CardData>("res://resources/cards/DefaultCard.tres");
         // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
 
-       PlayerDraw  = new Queue<Card>();
+        PlayerDraw = new Queue<Card>();
         var rnd = new RandomNumberGenerator();
 
         for (int i = 0; i < 100; i++)
         {
             PlayerDraw.Enqueue(
-                new Card { Data = new CardData(rnd.RandiRange(0, 20)), State = CardState.Draw }
+                new Card { Data = new CardData(rnd.RandiRange(0, 20)), State = global::Slots.Draw }
             );
         }
 
@@ -74,4 +73,6 @@ public partial class CardManager : Node2D
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta) { }
+
+    public void AddCard(Card card, Slot slot) { }
 }

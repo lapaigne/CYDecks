@@ -4,23 +4,13 @@ using System.Data;
 using System.Linq;
 using Godot;
 
-public enum CardState
-{
-    Draw,
-    Hand,
-    Play,
-    Discard,
-    Shop,
-    Destroyed
-}
-
 public partial class Card : Node2D
 {
     [Export]
     public CardData Data;
 
     [Export]
-    public CardState State;
+    public Slots State;
 
     [Export]
     public Node2D Master;
@@ -33,7 +23,7 @@ public partial class Card : Node2D
     private bool _targetSelected;
     private double _timeEnRoute;
     private Vector2 _velocity;
-    private CardSlot _slot = null;
+    private Slot _slot = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -55,7 +45,6 @@ public partial class Card : Node2D
         if (isMoving)
         {
             _timeEnRoute += delta;
-            
 
             if (_slot != null)
             {
@@ -89,7 +78,6 @@ public partial class Card : Node2D
                     {
                         s.CanClick = false;
                     }
-                    ChangeState();
                     TrySelectingNewPosition();
                 }
             }
@@ -100,26 +88,31 @@ public partial class Card : Node2D
     {
         if (!_targetSelected)
         {
-            
             var parent = GetParent<CardManager>();
             var slots = parent.Slots;
-            var available = new List<CardSlot>();
+            var available = new List<Slot>();
             switch (State)
             {
-                case CardState.Hand:
-                    available = new List<CardSlot>(
-                        slots.Where(slot => slot.Type == Slot.PlayerHand)
+                case Slots.Draw:
+                    available = new List<Slot>(slots.Where(slot => slot.Type == Slots.Hand));
+                    break;
+
+                case Slots.Hand:
+                    available = new List<Slot>(slots.Where(slot => slot.Type == Slots.Play));
+                    break;
+
+                case Slots.Play:
+                    available = new List<Slot>(
+                        slots.Where(slots => slots.Type == Slots.Discard)
                     );
                     break;
-                case CardState.Play:
-                    available = new List<CardSlot>(
-                        slots.Where(slot => slot.Type == Slot.PlayerPlay)
-                    );
+
+                case Slots.Discard:
+                    available = new List<Slot>(slots.Where(slots => slots.Type == Slots.Draw));
                     break;
-                case CardState.Discard:
-                    available = new List<CardSlot>(
-                        slots.Where(slots => slots.Type == Slot.PlayerDiscard)
-                    );
+
+                case Slots.Shop:
+                    available = new List<Slot>(slots.Where(slots => slots.Type == Slots.Draw));
                     break;
             }
 
@@ -129,15 +122,38 @@ public partial class Card : Node2D
                 {
                     if (!available[i].isOccupied)
                     {
-                        if (State == CardState.Play || State == CardState.Hand)
+                        if (_slot != null)
                         {
-                            available[i].isOccupied = true;
+                            _slot.isOccupied = false;
                         }
-
                         _slot = available[i];
                         ZIndex = i;
                         _targetSelected = true;
                         _velocity = _slot.Position - GlobalPosition;
+                        isMoving = true;
+
+                        switch (State)
+                        {
+                            case Slots.Draw:
+                                available[i].isOccupied = true;
+                                State = Slots.Hand;
+                                break;
+                            case Slots.Hand:
+                                available[i].isOccupied = true;
+                                State++;
+                                break;
+                            case Slots.Shop:
+                                State = Slots.Draw;
+                                break;
+
+                            default:
+                                if (_slot != null)
+                                {
+                                    _slot.isOccupied = false;
+                                }
+                                State++;
+                                break;
+                        }
 
                         break;
                         // return true;
@@ -150,66 +166,6 @@ public partial class Card : Node2D
                 GD.Print("no free slots were found");
                 // return false;
             }
-            
-        }
-    }
-
-
-    // change state in selection instead
-    public void ChangeState(bool giveOpponent = false)
-    {
-        isHovered = false;
-        var parent = GetParent<CardManager>();
-        switch (State)
-        {
-            case CardState.Draw:
-                isMoving = true;
-                State = CardState.Hand;
-                ZIndex++;
-
-                var instance = (Card)cardScene.Instantiate();
-                var card = parent.PlayerDraw.Dequeue();
-
-                instance.Data = card.Data;
-                instance.State = CardState.Draw;
-                instance.GlobalPosition = GlobalPosition;
-
-                parent.AddChild(instance);
-                return;
-
-            case CardState.Hand:
-                if (_slot != null)
-                {
-                    _slot.isOccupied = false;
-                }
-
-                isMoving = true;
-                State = CardState.Play;
-                // Data.OnPlayEffect();
-                return;
-
-            case CardState.Play:
-                if (_slot != null)
-                {
-                    GD.Print(_slot.Type);
-                    _slot.isOccupied = false;
-                }
-                isMoving = true;
-                State = CardState.Discard;
-                return;
-
-            case CardState.Discard:
-                isMoving = true;
-                State = CardState.Draw;
-                return;
-
-            case CardState.Shop:
-                isMoving = true;
-                State = CardState.Draw;
-                return;
-
-            default:
-                return;
         }
     }
 
@@ -217,6 +173,7 @@ public partial class Card : Node2D
     {
         // GD.Print("entered");
         isHovered = true;
+        GD.Print(State);
     }
 
     public void OnMouseExited()
