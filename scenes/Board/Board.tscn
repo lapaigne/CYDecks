@@ -13,7 +13,7 @@ texture = ExtResource("1_um2dy")
 
 [node name="Display" parent="." instance=ExtResource("1_68jxb")]
 texture_repeat = 2
-position = Vector2(438, 15)
+position = Vector2(438, 14)
 NumericalValue = 41
 
 [node name="Camera2D" type="Camera2D" parent="."]

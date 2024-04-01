@@ -10,65 +10,72 @@ public partial class Card : Node2D
     public CardData Data;
 
     [Export]
-    public Slots State;
+    public SlotType State;
 
     [Export]
     public Node2D Master;
 
     [Export]
     public bool CanClick = true;
-    private bool isHovered;
-    private bool isMoving;
-    private PackedScene cardScene;
-    private bool _targetSelected;
-    private double _timeEnRoute;
-    private Vector2 _velocity;
-    private Slot _slot = null;
+    public bool isMoving;
+    public bool isHovered;
+    // public PackedScene cardScene;
+    public bool targetSelected;
+    public double timeEnRoute;
+    public Vector2 Velocity;
+    public Slot Slot = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
+        // cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
 
-        if (Data != null)
-        {
-            var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-            sprite.Frame = Data.Id;
-            Data.OnPlayEffect();
-        }
+        // if (Data != null)
+        // {
+        //     var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        //     sprite.Frame = (State == Slots.Draw || State == Slots.Shop) ? 1 : Data.Id;
+
+        // }
+    }
+
+    public override void _Process(double delta)
+    {
+        var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        sprite.Frame = (State == SlotType.Draw || State == SlotType.Shop) ? 1 : Data.Id;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta)
     {
         var siblngs = GetParent<CardManager>().GetChildren().Where(s => s is Card);
-        if (isMoving)
-        {
-            _timeEnRoute += delta;
+        // if (isMoving)
+        // {
+        //     timeEnRoute += delta;
 
-            if (_slot != null)
-            {
-                // GD.Print(targetSelected);
-                var distance = _slot.Position.DistanceTo(GlobalPosition);
-                // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
-                if (distance > 2 && _timeEnRoute <= 0.2)
-                {
-                    Translate(_velocity * (float)delta / 0.2f);
-                }
-                else
-                {
-                    foreach (Card s in siblngs)
-                    {
-                        s.CanClick = true;
-                    }
-                    GlobalPosition = _slot.Position;
-                    _targetSelected = false;
-                    isMoving = false;
-                    _timeEnRoute = 0;
-                }
-            }
-        }
-        else if (isHovered)
+        //     if (Slot != null)
+        //     {
+        //         // GD.Print(targetSelected);
+        //         var distance = Slot.Position.DistanceTo(GlobalPosition);
+        //         // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
+        //         if (distance > 2 && timeEnRoute <= 0.2)
+        //         {
+        //             Translate(_velocity * (float)delta / 0.2f);
+        //         }
+        //         else
+        //         {
+        //             foreach (Card s in siblngs)
+        //             {
+        //                 s.CanClick = true;
+        //             }
+        //             GlobalPosition = Slot.Position;
+        //             targetSelected = false;
+        //             isMoving = false;
+        //             timeEnRoute = 0;
+        //         }
+        //     }
+        // }
+        // else 
+        if (isHovered)
         {
             if (Input.IsActionJustPressed("click"))
             {
@@ -86,33 +93,31 @@ public partial class Card : Node2D
 
     public void TrySelectingNewPosition()
     {
-        if (!_targetSelected)
+        if (!targetSelected)
         {
             var parent = GetParent<CardManager>();
             var slots = parent.Slots;
             var available = new List<Slot>();
             switch (State)
             {
-                case Slots.Draw:
-                    available = new List<Slot>(slots.Where(slot => slot.Type == Slots.Hand));
+                case SlotType.Draw:
+                    available = new List<Slot>(slots.Where(slot => slot.Type == SlotType.Hand));
                     break;
 
-                case Slots.Hand:
-                    available = new List<Slot>(slots.Where(slot => slot.Type == Slots.Play));
+                case SlotType.Hand:
+                    available = new List<Slot>(slots.Where(slot => slot.Type == SlotType.Play));
                     break;
 
-                case Slots.Play:
-                    available = new List<Slot>(
-                        slots.Where(slots => slots.Type == Slots.Discard)
-                    );
+                case SlotType.Play:
+                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Discard));
                     break;
 
-                case Slots.Discard:
-                    available = new List<Slot>(slots.Where(slots => slots.Type == Slots.Draw));
+                case SlotType.Discard:
+                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Draw));
                     break;
 
-                case Slots.Shop:
-                    available = new List<Slot>(slots.Where(slots => slots.Type == Slots.Draw));
+                case SlotType.Shop:
+                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Draw));
                     break;
             }
 
@@ -122,39 +127,44 @@ public partial class Card : Node2D
                 {
                     if (!available[i].isOccupied)
                     {
-                        if (_slot != null)
+                        if (Slot != null)
                         {
-                            _slot.isOccupied = false;
+                            Slot.isOccupied = false;
                         }
-                        _slot = available[i];
+                        Slot = available[i];
                         ZIndex = i;
-                        _targetSelected = true;
-                        _velocity = _slot.Position - GlobalPosition;
+                        targetSelected = true;
+                        Velocity = Slot.Position - GlobalPosition;
                         isMoving = true;
 
                         switch (State)
                         {
-                            case Slots.Draw:
+                            case SlotType.Draw:
                                 available[i].isOccupied = true;
-                                State = Slots.Hand;
+                                State = SlotType.Hand;
                                 break;
-                            case Slots.Hand:
+
+                            case SlotType.Hand:
                                 available[i].isOccupied = true;
                                 State++;
                                 break;
-                            case Slots.Shop:
-                                State = Slots.Draw;
+
+                            case SlotType.Shop:
+                                State = SlotType.Draw;
                                 break;
 
                             default:
-                                if (_slot != null)
+                                if (Slot != null)
                                 {
-                                    _slot.isOccupied = false;
+                                    if (State == SlotType.Play)
+                                    {
+                                        Data.OnPlayEffect();
+                                    }
+                                    Slot.isOccupied = false;
                                 }
                                 State++;
                                 break;
                         }
-
                         break;
                         // return true;
                     }
@@ -173,7 +183,7 @@ public partial class Card : Node2D
     {
         // GD.Print("entered");
         isHovered = true;
-        GD.Print(State);
+        // GD.Print(State);
     }
 
     public void OnMouseExited()
