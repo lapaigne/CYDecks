@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -17,9 +16,9 @@ public partial class Card : Node2D
 
     [Export]
     public bool CanClick = true;
+
     public bool isMoving;
     public bool isHovered;
-    // public PackedScene cardScene;
     public bool targetSelected;
     public double timeEnRoute;
     public Vector2 Velocity;
@@ -40,6 +39,7 @@ public partial class Card : Node2D
 
     public override void _Process(double delta)
     {
+        // move to state switching
         var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         sprite.Frame = (State == SlotType.Draw || State == SlotType.Shop) ? 1 : Data.Id;
     }
@@ -47,7 +47,7 @@ public partial class Card : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta)
     {
-        var siblngs = GetParent<CardManager>().GetChildren().Where(s => s is Card);
+        // var siblings = GetParent<CardManager>().GetChildren().Where(s => s is Card);
         // if (isMoving)
         // {
         //     timeEnRoute += delta;
@@ -74,21 +74,21 @@ public partial class Card : Node2D
         //         }
         //     }
         // }
-        // else 
-        if (isHovered)
-        {
-            if (Input.IsActionJustPressed("click"))
-            {
-                if (CanClick)
-                {
-                    foreach (Card s in siblngs)
-                    {
-                        s.CanClick = false;
-                    }
-                    TrySelectingNewPosition();
-                }
-            }
-        }
+        // else
+        // if (isHovered)
+        // {
+        //     if (Input.IsActionJustPressed("click"))
+        //     {
+        //         if (CanClick)
+        //         {
+        //             foreach (Card s in siblings)
+        //             {
+        //                 s.CanClick = false;
+        //             }
+        //             TrySelectingNewPosition();
+        //         }
+        //     }
+        // }
     }
 
     public void TrySelectingNewPosition()
@@ -109,7 +109,9 @@ public partial class Card : Node2D
                     break;
 
                 case SlotType.Play:
-                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Discard));
+                    available = new List<Slot>(
+                        slots.Where(slots => slots.Type == SlotType.Discard)
+                    );
                     break;
 
                 case SlotType.Discard:
@@ -146,6 +148,7 @@ public partial class Card : Node2D
 
                             case SlotType.Hand:
                                 available[i].isOccupied = true;
+                                Data.OnPlayEffect();
                                 State++;
                                 break;
 
@@ -154,14 +157,7 @@ public partial class Card : Node2D
                                 break;
 
                             default:
-                                if (Slot != null)
-                                {
-                                    if (State == SlotType.Play)
-                                    {
-                                        Data.OnPlayEffect();
-                                    }
-                                    Slot.isOccupied = false;
-                                }
+                                Slot.isOccupied = false;
                                 State++;
                                 break;
                         }

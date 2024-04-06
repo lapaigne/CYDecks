@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-// better off instantiate all cards instead
-// queues and stacks make things overcomplicated
+// better off instantiate all cards instead (actually probably not)
 
 public partial class CardManager : Node2D
 {
@@ -17,11 +16,15 @@ public partial class CardManager : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        // make all slots nodes in the scene tree
+
         Slots = new Slot[]
         {
             new Slot
             {
-                Position = new Vector2(164, 306), Type = SlotType.Hand, OwnerId = 0
+                Position = new Vector2(164, 306),
+                Type = SlotType.Hand,
+                OwnerId = 0
             },
             new Slot
             {
@@ -200,9 +203,6 @@ public partial class CardManager : Node2D
                 new Card { Data = new CardData(rnd.RandiRange(0, 20)), State = SlotType.Draw }
             );
         }
-
-        // drawQueue.Enqueue(new Card { Data = new CardData(2), State = CardState.Draw });
-        // drawQueue.Enqueue(new Card { Data = new CardData(18), State = CardState.Draw });
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -231,6 +231,24 @@ public partial class CardManager : Node2D
                     child.targetSelected = false;
                     child.isMoving = false;
                     child.timeEnRoute = 0;
+                }
+            }
+            else if (child.isHovered)
+            {
+                if (Input.IsActionJustPressed("click"))
+                {
+                    if (child.CanClick)
+                    {
+                        foreach (Card s in children)
+                        {
+                            s.CanClick = false;
+                        }
+                        GD.Print("beep boop boop");
+                        var rnd = new RandomNumberGenerator();
+                        var sprite = child.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+                        sprite.Frame = rnd.RandiRange(0, 20);
+                        child.TrySelectingNewPosition();
+                    }
                 }
             }
         }
