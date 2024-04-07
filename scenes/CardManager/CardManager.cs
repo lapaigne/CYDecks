@@ -18,15 +18,7 @@ public partial class CardManager : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // make all slots nodes in the scene tree
-        // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
-
-        Player = new PlayerData();
-        Opponent = new PlayerData();
-
-        var dp = GetNode<DisplayManager>("/root/Board/DisplayManager");
-        dp.Player = Player;
-        dp.Opponent = Opponent;
+        // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");        
 
         PlayerDraw = new Queue<Card>();
         var rnd = new RandomNumberGenerator();

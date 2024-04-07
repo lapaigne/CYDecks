@@ -21,9 +21,12 @@ public partial class DisplayArray : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        _health.NumericalValue = data.Health;
-        _money.NumericalValue = data.Money;
-        _shield.NumericalValue = data.Shield;
-        _damage.NumericalValue = data.Damage;
+        if (data != null)
+        {
+            _health.NumericalValue = data.Health;
+            _money.NumericalValue = data.Money;
+            _shield.NumericalValue = data.Shield;
+            _damage.NumericalValue = data.Damage;
+        }
     }
 }

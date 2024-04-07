@@ -6,6 +6,7 @@ public partial class CardData : Resource
 {
     [Export]
     public int Id;
+    public bool Destroy; 
 
     public CardData()
     {

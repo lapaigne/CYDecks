@@ -107,6 +107,15 @@ public partial class Card : Node2D
                                 State++;
                                 break;
 
+                            case SlotType.Play:
+                                if (Data.Destroy)
+                                {
+                                    QueueFree();
+                                    break;
+                                }
+                                State++;
+                                break;
+
                             case SlotType.Shop:
                                 State = SlotType.Draw;
                                 break;

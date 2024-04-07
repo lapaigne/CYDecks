@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Data.Common;
 using Godot;
 
@@ -19,18 +20,24 @@ public partial class BankCardData : CardData
         _playCounter = 0;
     }
 
-
     public override void OnPlayEffect(PlayerData player = null, PlayerData opponent = null)
     {
+        GD.Print(_playCounter);
         if (_playCounter == 0)
         {
             player.Money += 10;
-            _playCounter++;
         }
-        else if (_playCounter < 4)
+        else if (_playCounter <= 4)
         {
             player.Money -= 3;
+            if (player.Money < 0)
+            {
+                player.Health += player.Money;
+                player.Money = 0;
+                Destroy = true;
+            }
         }
+        _playCounter++;
         // GD.Print($"Effect of bank card with id={Id} was activated");
     }
 
@@ -39,5 +46,8 @@ public partial class BankCardData : CardData
 
     public override void OnDiscardEffect(PlayerData player = null, PlayerData opponent = null) { }
 
-    public override void OnDamageTakenEffect(PlayerData player = null, PlayerData opponent = null) { }
+    public override void OnDamageTakenEffect(
+        PlayerData player = null,
+        PlayerData opponent = null
+    ) { }
 }

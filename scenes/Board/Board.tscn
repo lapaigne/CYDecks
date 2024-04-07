@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2l11h5q5p3ht"]
+[gd_scene load_steps=6 format=3 uid="uid://c2l11h5q5p3ht"]
 
 [ext_resource type="Texture2D" uid="uid://cnkn8iathytad" path="res://assets/board2.png" id="1_um2dy"]
+[ext_resource type="PackedScene" uid="uid://yq7sk2881he4" path="res://scenes/GameManager/GameManager.tscn" id="2_567tw"]
 [ext_resource type="PackedScene" uid="uid://ctian655ij62l" path="res://scenes/DisplayManager/DisplayManager.tscn" id="3_l048t"]
 [ext_resource type="PackedScene" uid="uid://11oj1tawurep" path="res://scenes/CardManager/CardManager.tscn" id="3_x2g6t"]
 [ext_resource type="PackedScene" uid="uid://c2lnvndjftcpp" path="res://scenes/Debug/Debug.tscn" id="4_8fmpc"]
@@ -15,6 +16,8 @@ texture = ExtResource("1_um2dy")
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 editor_draw_limits = true
+
+[node name="GameManager" parent="." instance=ExtResource("2_567tw")]
 
 [node name="CardManager" parent="." instance=ExtResource("3_x2g6t")]
 
