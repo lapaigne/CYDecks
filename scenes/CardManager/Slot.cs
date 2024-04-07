@@ -21,11 +21,4 @@ public partial class Slot : Node2D
 
     [Export]
     public int OwnerId;
-
-    // public Slot(Vector2 position, SlotType type, int ownerId = -1)
-    // {
-    //     Position = position;
-    //     Type = type;
-    //     OwnerId = ownerId;
-    // }
 }

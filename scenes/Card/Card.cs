@@ -45,53 +45,7 @@ public partial class Card : Node2D
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _PhysicsProcess(double delta)
-    {
-        // var siblings = GetParent<CardManager>().GetChildren().Where(s => s is Card);
-        // if (isMoving)
-        // {
-        //     timeEnRoute += delta;
-
-        //     if (Slot != null)
-        //     {
-        //         // GD.Print(targetSelected);
-        //         var distance = Slot.Position.DistanceTo(GlobalPosition);
-        //         // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
-        //         if (distance > 2 && timeEnRoute <= 0.2)
-        //         {
-        //             Translate(_velocity * (float)delta / 0.2f);
-        //         }
-        //         else
-        //         {
-        //             foreach (Card s in siblngs)
-        //             {
-        //                 s.CanClick = true;
-        //             }
-        //             GlobalPosition = Slot.Position;
-        //             targetSelected = false;
-        //             isMoving = false;
-        //             timeEnRoute = 0;
-        //         }
-        //     }
-        // }
-        // else
-        // if (isHovered)
-        // {
-        //     if (Input.IsActionJustPressed("click"))
-        //     {
-        //         if (CanClick)
-        //         {
-        //             foreach (Card s in siblings)
-        //             {
-        //                 s.CanClick = false;
-        //             }
-        //             TrySelectingNewPosition();
-        //         }
-        //     }
-        // }
-    }
-
-    public void TrySelectingNewPosition()
+    public void TrySelectingNewPosition(PlayerData player, PlayerData opponent)
     {
         if (!targetSelected)
         {
@@ -149,7 +103,7 @@ public partial class Card : Node2D
 
                             case SlotType.Hand:
                                 available[i].isOccupied = true;
-                                Data.OnPlayEffect();
+                                Data.OnPlayEffect(player, opponent);
                                 State++;
                                 break;
 

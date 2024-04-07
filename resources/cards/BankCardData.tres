@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BankCardData" load_steps=2 format=3 uid="uid://do76ie3ohuyse"]
+
+[ext_resource type="Script" path="res://scripts/BankCardData.cs" id="1_1u64r"]
+
+[resource]
+script = ExtResource("1_1u64r")
+Duration = 0
+Initial = 0
+Regular = 0
+Id = 0
+noEffect = true

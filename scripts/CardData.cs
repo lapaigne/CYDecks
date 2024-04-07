@@ -7,21 +7,6 @@ public partial class CardData : Resource
     [Export]
     public int Id;
 
-    [Export]
-    public bool noEffect = true;
-
-    [Export]
-    public int Health = 0;
-
-    [Export]
-    public int Shield = 0;
-
-    [Export]
-    public int Damage = 0;
-
-    [Export]
-    public int Money = 0;
-
     public CardData()
     {
         Id = 0;
@@ -32,14 +17,14 @@ public partial class CardData : Resource
         Id = id;
     }
 
-    public void OnPlayEffect()
+    public virtual void OnPlayEffect(PlayerData player = null, PlayerData opponent = null)
     {
-        GD.Print($"Effect of card with id={Id} was activated");
+        GD.Print($"Effect of card with id={Id} was activated at play");
     }
 
-    public void OnClickEffect() { }
+    public virtual void OnClickEffect(PlayerData player = null, PlayerData opponent = null) { }
 
-    public void OnDiscardEffect() { }
+    public virtual void OnDiscardEffect(PlayerData player = null, PlayerData opponent = null) { }
 
-    public void OnDamageTakenEffect() { }
+    public virtual void OnDamageTakenEffect(PlayerData player = null, PlayerData opponent = null) { }
 }

@@ -5,32 +5,45 @@ public partial class SDD : Node2D
 {
     [Export]
     public bool IsHidden = false;
+
     [Export]
-    public byte NumericalValue = 0;
+    public int NumericalValue = 0;
+
+    [Export]
+    public Color Color;
+
+    private AnimatedSprite2D _left;
+    private AnimatedSprite2D _right;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        var left = GetNode<AnimatedSprite2D>("Left");
-        var right = GetNode<AnimatedSprite2D>("Right");
-         // get data from server and set value/idle
+        ((ShaderMaterial)Material).SetShaderParameter("new", Color);
 
-        if (IsHidden)
-        {
-            left.Animation = "idle";
-            right.Animation = "idle";
-            left.Play();
-            right.Play();
-        }
-        else
-        {
-            left.Animation = "display";
-            left.Frame = NumericalValue / 10 % 10;
-            right.Animation = "display";
-            right.Frame = NumericalValue % 10;
-        }
+        _left = GetNode<AnimatedSprite2D>("Left");
+        _right = GetNode<AnimatedSprite2D>("Right");
+        // get data from server and set value/idle
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta) { }
+    public override void _Process(double delta)
+    {
+        _left.Material = Material;
+        _right.Material = Material;
+
+        if (IsHidden && !_left.IsPlaying())
+        {
+            _left.Animation = "idle";
+            _right.Animation = "idle";
+            _left.Play();
+            _right.Play();
+        }
+        else if (!IsHidden)
+        {
+            _left.Animation = "display";
+            _left.Frame = NumericalValue / 10 % 10;
+            _right.Animation = "display";
+            _right.Frame = NumericalValue % 10;
+        }
+    }
 }

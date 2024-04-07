@@ -12,11 +12,21 @@ public partial class CardManager : Node2D
     public Queue<Card> OpponentDraw;
     private double _coolDown;
 
+    public PlayerData Player;
+    public PlayerData Opponent;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         // make all slots nodes in the scene tree
         // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
+
+        Player = new PlayerData();
+        Opponent = new PlayerData();
+
+        var dp = GetNode<DisplayManager>("/root/Board/DisplayManager");
+        dp.Player = Player;
+        dp.Opponent = Opponent;
 
         PlayerDraw = new Queue<Card>();
         var rnd = new RandomNumberGenerator();
@@ -69,7 +79,7 @@ public partial class CardManager : Node2D
                         var rnd = new RandomNumberGenerator();
                         var sprite = child.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
                         sprite.Frame = rnd.RandiRange(0, 20);
-                        child.TrySelectingNewPosition();
+                        child.TrySelectingNewPosition(Player, Opponent);
                     }
                 }
             }

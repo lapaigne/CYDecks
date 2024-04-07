@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctian655ij62l"]
+
+[ext_resource type="Script" path="res://scenes/DisplayManager/DisplayManager.cs" id="1_y1dqc"]
+[ext_resource type="PackedScene" uid="uid://dryjv81ngrg8f" path="res://scenes/DisplayManager/DisplayArray.tscn" id="3_osyok"]
+
+[node name="DisplayManager" type="Node2D"]
+script = ExtResource("1_y1dqc")
+
+[node name="PDisplay" parent="." instance=ExtResource("3_osyok")]
+position = Vector2(330, 314)
+
+[node name="ODisplay" parent="." instance=ExtResource("3_osyok")]
+position = Vector2(330, 14)
