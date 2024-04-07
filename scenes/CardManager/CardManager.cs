@@ -10,188 +10,12 @@ public partial class CardManager : Node2D
     public List<Card> Shop;
     public Queue<Card> PlayerDraw;
     public Queue<Card> OpponentDraw;
-    public Slot[] Slots;
     private double _coolDown;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         // make all slots nodes in the scene tree
-
-        Slots = new Slot[]
-        {
-            new Slot
-            {
-                Position = new Vector2(164, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(184, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(204, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(224, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(244, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(264, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(284, 306),
-                Type = SlotType.Hand,
-                OwnerId = 0
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(164, 186),
-                Type = SlotType.Play,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(204, 186),
-                Type = SlotType.Play,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(244, 186),
-                Type = SlotType.Play,
-                OwnerId = 0
-            },
-            new Slot
-            {
-                Position = new Vector2(284, 186),
-                Type = SlotType.Play,
-                OwnerId = 0
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(86, 186),
-                Type = SlotType.Discard,
-                OwnerId = 0
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(6, 246),
-                Type = SlotType.Draw,
-                OwnerId = 0
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(164, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(184, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(204, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(224, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(244, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(264, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(284, 6),
-                Type = SlotType.Hand,
-                OwnerId = 1
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(164, 126),
-                Type = SlotType.Play,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(204, 126),
-                Type = SlotType.Play,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(244, 126),
-                Type = SlotType.Play,
-                OwnerId = 1
-            },
-            new Slot
-            {
-                Position = new Vector2(284, 126),
-                Type = SlotType.Play,
-                OwnerId = 1
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(86, 126),
-                Type = SlotType.Discard,
-                OwnerId = 1
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(6, 66),
-                Type = SlotType.Draw,
-                OwnerId = 1
-            },
-            //
-            new Slot
-            {
-                Position = new Vector2(344, 156),
-                Type = SlotType.Shop,
-                OwnerId = -1
-            },
-        };
-
         // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
 
         PlayerDraw = new Queue<Card>();
@@ -208,15 +32,13 @@ public partial class CardManager : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta)
     {
-        var children = GetChildren().Where(child => child is Card);
+        var children = GetChildren().OfType<Card>();
         foreach (Card child in children)
         {
             if (child.isMoving && child.Slot != null)
             {
                 child.timeEnRoute += delta;
-                // GD.Print(targetSelected);
                 var distance = child.Slot.Position.DistanceTo(child.GlobalPosition);
-                // var velocity = (targetPosition - GlobalPosition).Normalized() * distance * (float)delta;
                 if (distance > 2 && child.timeEnRoute <= 0.2)
                 {
                     Translate(child.Velocity * (float)delta / 0.2f);

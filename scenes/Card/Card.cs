@@ -12,7 +12,7 @@ public partial class Card : Node2D
     public SlotType State;
 
     [Export]
-    public Node2D Master;
+    public bool BelongsToPlayer;
 
     [Export]
     public bool CanClick = true;
@@ -96,7 +96,8 @@ public partial class Card : Node2D
         if (!targetSelected)
         {
             var parent = GetParent<CardManager>();
-            var slots = parent.Slots;
+            var slots = parent.GetNode<Node2D>("SlotArray").GetChildren().OfType<Slot>();
+            // var _slots = slots.Where(child => child is Slot);
             var available = new List<Slot>();
             switch (State)
             {

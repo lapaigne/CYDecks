@@ -4,7 +4,7 @@ using Godot;
 public partial class SDD : Node2D
 {
     [Export]
-    public bool isHidden = false;
+    public bool IsHidden = false;
     [Export]
     public byte NumericalValue = 0;
 
@@ -15,7 +15,7 @@ public partial class SDD : Node2D
         var right = GetNode<AnimatedSprite2D>("Right");
          // get data from server and set value/idle
 
-        if (isHidden)
+        if (IsHidden)
         {
             left.Animation = "idle";
             right.Animation = "idle";

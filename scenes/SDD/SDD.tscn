@@ -156,8 +156,10 @@ script = ExtResource("2_ggrym")
 position = Vector2(8, 16)
 sprite_frames = SubResource("SpriteFrames_2njc4")
 animation = &"idle"
+speed_scale = 3.0
 
 [node name="Right" type="AnimatedSprite2D" parent="."]
 position = Vector2(24, 16)
 sprite_frames = SubResource("SpriteFrames_2njc4")
 animation = &"idle"
+speed_scale = 3.0

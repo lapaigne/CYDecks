@@ -8,14 +8,18 @@ public enum SlotType
     Discard,
     Draw,
     Shop,
-    Destroyed
+    Unassigned
 }
 
-public partial class Slot
+public partial class Slot : Node2D
 {
-    public Vector2 Position;
+    [Export]
     public bool isOccupied;
+
+    [Export]
     public SlotType Type;
+
+    [Export]
     public int OwnerId;
 
     // public Slot(Vector2 position, SlotType type, int ownerId = -1)
