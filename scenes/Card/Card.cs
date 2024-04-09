@@ -103,7 +103,8 @@ public partial class Card : Node2D
                             case SlotType.Play:
                                 if (Data.Destroy)
                                 {
-                                    QueueFree();
+                                    Visible = false;
+                                    CanClick = false;
                                     break;
                                 }
                                 State++;

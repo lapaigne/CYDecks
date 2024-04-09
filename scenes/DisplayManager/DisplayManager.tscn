@@ -1,7 +1,32 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctian655ij62l"]
+[gd_scene load_steps=8 format=3 uid="uid://ctian655ij62l"]
 
 [ext_resource type="Script" path="res://scenes/DisplayManager/DisplayManager.cs" id="1_y1dqc"]
+[ext_resource type="Shader" path="res://resources/shaders/DisplayShader.gdshader" id="3_7t2eq"]
 [ext_resource type="PackedScene" uid="uid://dryjv81ngrg8f" path="res://scenes/DisplayManager/DisplayArray.tscn" id="3_osyok"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xrdxm"]
+resource_local_to_scene = true
+shader = ExtResource("3_7t2eq")
+shader_parameter/origin = Color(1, 1, 1, 1)
+shader_parameter/new = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwkok"]
+resource_local_to_scene = true
+shader = ExtResource("3_7t2eq")
+shader_parameter/origin = Color(1, 1, 1, 1)
+shader_parameter/new = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ruj3"]
+resource_local_to_scene = true
+shader = ExtResource("3_7t2eq")
+shader_parameter/origin = Color(1, 1, 1, 1)
+shader_parameter/new = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_woulk"]
+resource_local_to_scene = true
+shader = ExtResource("3_7t2eq")
+shader_parameter/origin = Color(1, 1, 1, 1)
+shader_parameter/new = null
 
 [node name="DisplayManager" type="Node2D"]
 script = ExtResource("1_y1dqc")
@@ -11,3 +36,18 @@ position = Vector2(330, 314)
 
 [node name="ODisplay" parent="." instance=ExtResource("3_osyok")]
 position = Vector2(330, 14)
+
+[node name="Health" parent="ODisplay" index="0"]
+material = SubResource("ShaderMaterial_xrdxm")
+IsHidden = true
+
+[node name="Money" parent="ODisplay" index="1"]
+material = SubResource("ShaderMaterial_iwkok")
+
+[node name="Shield" parent="ODisplay" index="2"]
+material = SubResource("ShaderMaterial_0ruj3")
+
+[node name="Damage" parent="ODisplay" index="3"]
+material = SubResource("ShaderMaterial_woulk")
+
+[editable path="ODisplay"]
