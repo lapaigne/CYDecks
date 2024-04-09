@@ -1,11 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 public partial class GameManager : Node2D
 {
-    public enum GameState { 
-        
-    }
+    public enum GameState { }
 
     public PlayerData Player;
     public PlayerData Opponent;
@@ -24,6 +23,32 @@ public partial class GameManager : Node2D
         var cardManager = GetNode<CardManager>("/root/Board/CardManager");
         cardManager.Player = Player;
         cardManager.Opponent = Opponent;
+
+        cardManager.PlayerDraw = new Queue<Card>();
+        var rnd = new RandomNumberGenerator();
+
+        for (int i = 0; i < 15; i++)
+        {
+            var number = rnd.RandiRange(0, 19);
+            switch (number)
+            {
+                case 3:
+                    cardManager.PlayerDraw.Enqueue(
+                        new Card { Data = new StandardCardData{ Id = number, Health = -1 }, State = SlotType.Draw }
+                    );
+                    break;
+                case 18:
+                    cardManager.PlayerDraw.Enqueue(
+                        new Card { Data = new BankCardData(number), State = SlotType.Draw }
+                    );
+                    break;
+                default:
+                    cardManager.PlayerDraw.Enqueue(
+                        new Card { Data = new CardData(number), State = SlotType.Draw }
+                    );
+                    break;
+            }
+        }
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

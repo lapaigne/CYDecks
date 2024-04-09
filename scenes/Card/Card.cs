@@ -12,11 +12,10 @@ public partial class Card : Node2D
     public SlotType State;
 
     [Export]
-    public bool BelongsToPlayer;
+    public int OwnerId;
 
     [Export]
     public bool CanClick = true;
-
     public bool isMoving;
     public bool isHovered;
     public bool targetSelected;
@@ -25,17 +24,7 @@ public partial class Card : Node2D
     public Slot Slot = null;
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        // cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
-
-        // if (Data != null)
-        // {
-        //     var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-        //     sprite.Frame = (State == Slots.Draw || State == Slots.Shop) ? 1 : Data.Id;
-
-        // }
-    }
+    public override void _Ready() { }
 
     public override void _Process(double delta)
     {
@@ -45,12 +34,16 @@ public partial class Card : Node2D
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public void TrySelectingNewPosition(PlayerData player, PlayerData opponent)
+    public bool TrySelectingNewPosition(PlayerData player, PlayerData opponent)
     {
         if (!targetSelected)
         {
             var parent = GetParent<CardManager>();
-            var slots = parent.GetNode<Node2D>("SlotArray").GetChildren().OfType<Slot>();
+            var slots = parent
+                .GetNode<Node2D>("SlotArray")
+                .GetChildren()
+                .OfType<Slot>()
+                .Where(slot => slot.OwnerId == OwnerId || OwnerId == -1);
             // var _slots = slots.Where(child => child is Slot);
             var available = new List<Slot>();
             switch (State)
@@ -125,18 +118,18 @@ public partial class Card : Node2D
                                 State++;
                                 break;
                         }
-                        break;
-                        // return true;
+                        return true;
                     }
                 }
-                // return false;
+                return false;
             }
             else
             {
                 GD.Print("no free slots were found");
-                // return false;
+                return false;
             }
         }
+        return false;
     }
 
     public void OnMouseEntered()

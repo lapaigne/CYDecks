@@ -18,16 +18,15 @@ public partial class CardManager : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // var scene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");        
-
-        PlayerDraw = new Queue<Card>();
-        var rnd = new RandomNumberGenerator();
-
-        for (int i = 0; i < 100; i++)
+        var cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
+        foreach (Card card in PlayerDraw)
         {
-            PlayerDraw.Enqueue(
-                new Card { Data = new CardData(rnd.RandiRange(0, 20)), State = SlotType.Draw }
-            );
+            var instance = (Card)cardScene.Instantiate();
+            instance.State = card.State;
+            instance.Data = card.Data;
+            instance.Position = GetNode<Slot>("SlotArray/PDraw").Position;
+
+            AddChild(instance);
         }
     }
 
@@ -35,6 +34,7 @@ public partial class CardManager : Node2D
     public override void _PhysicsProcess(double delta)
     {
         var children = GetChildren().OfType<Card>();
+
         foreach (Card child in children)
         {
             if (child.isMoving && child.Slot != null)
@@ -43,7 +43,7 @@ public partial class CardManager : Node2D
                 var distance = child.Slot.Position.DistanceTo(child.GlobalPosition);
                 if (distance > 2 && child.timeEnRoute <= 0.2)
                 {
-                    Translate(child.Velocity * (float)delta / 0.2f);
+                    child.Translate(child.Velocity * (float)delta / 0.2f);
                 }
                 else
                 {
@@ -63,15 +63,17 @@ public partial class CardManager : Node2D
                 {
                     if (child.CanClick)
                     {
-                        foreach (Card s in children)
+                        // GD.Print("beep boop boop");
+                        // var rnd = new RandomNumberGenerator();
+                        // var sprite = child.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+                        // sprite.Frame = rnd.RandiRange(0, 20);
+                        if (child.TrySelectingNewPosition(Player, Opponent))
                         {
-                            s.CanClick = false;
+                            foreach (Card s in children)
+                            {
+                                s.CanClick = false;
+                            }
                         }
-                        GD.Print("beep boop boop");
-                        var rnd = new RandomNumberGenerator();
-                        var sprite = child.GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-                        sprite.Frame = rnd.RandiRange(0, 20);
-                        child.TrySelectingNewPosition(Player, Opponent);
                     }
                 }
             }

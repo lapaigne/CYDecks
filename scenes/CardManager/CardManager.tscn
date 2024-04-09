@@ -1,25 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://11oj1tawurep"]
+[gd_scene load_steps=3 format=3 uid="uid://11oj1tawurep"]
 
 [ext_resource type="Script" path="res://scenes/CardManager/CardManager.cs" id="1_va62f"]
-[ext_resource type="PackedScene" uid="uid://ptws4j4qklxa" path="res://scenes/Card/Card.tscn" id="2_gri05"]
-[ext_resource type="Script" path="res://scripts/BankCardData.cs" id="3_oyjx5"]
 [ext_resource type="PackedScene" uid="uid://blx2m3ktjdi8e" path="res://scenes/CardManager/SlotArray.tscn" id="5_5ty6c"]
-
-[sub_resource type="Resource" id="Resource_fvsxx"]
-script = ExtResource("3_oyjx5")
-Id = 18
-noEffect = false
-Health = 0
-Shield = 0
-Damage = 0
-Money = 10
 
 [node name="CardManager" type="Node2D"]
 script = ExtResource("1_va62f")
-
-[node name="Card" parent="." instance=ExtResource("2_gri05")]
-position = Vector2(6, 246)
-Data = SubResource("Resource_fvsxx")
-State = 3
 
 [node name="SlotArray" parent="." instance=ExtResource("5_5ty6c")]

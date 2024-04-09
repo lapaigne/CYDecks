@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="StandardCardData" load_steps=2 format=3 uid="uid://b6e70rl23tinm"]
+
+[ext_resource type="Script" path="res://scripts/StandardCardData.cs" id="1_nvyl2"]
+
+[resource]
+script = ExtResource("1_nvyl2")
+Id = 0

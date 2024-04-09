@@ -20,6 +20,12 @@ public partial class BankCardData : CardData
         _playCounter = 0;
     }
 
+    public BankCardData(int Id)
+    {
+        this.Id = Id;
+        _playCounter = 0;
+    }
+
     public override void OnPlayEffect(PlayerData player = null, PlayerData opponent = null)
     {
         GD.Print(_playCounter);
