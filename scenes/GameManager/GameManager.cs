@@ -8,10 +8,13 @@ public partial class GameManager : Node2D
 
     public PlayerData Player;
     public PlayerData Opponent;
+    private GameContext _context;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        _context = new GameContext();
+        
         // get initial data from server
         Player = new PlayerData { Health = 15 };
         Opponent = new PlayerData();
@@ -25,6 +28,7 @@ public partial class GameManager : Node2D
         cardManager.Opponent = Opponent;
 
         cardManager.PlayerDraw = new Queue<Card>();
+        cardManager.OpponentDraw = new Queue<Card>();
         var rnd = new RandomNumberGenerator();
 
         for (int i = 0; i < 15; i++)
@@ -34,7 +38,11 @@ public partial class GameManager : Node2D
             {
                 case 3:
                     cardManager.PlayerDraw.Enqueue(
-                        new Card { Data = new StandardCardData{ Id = number, Health = -1 }, State = SlotType.Draw }
+                        new Card
+                        {
+                            Data = new StandardCardData { Id = number, Health = -1 },
+                            State = SlotType.Draw
+                        }
                     );
                     break;
                 case 18:
