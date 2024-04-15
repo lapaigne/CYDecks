@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 public class ResourceModel
 {
-    int Id { get; set; }
-    string File { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public string File { get; set; }
 }

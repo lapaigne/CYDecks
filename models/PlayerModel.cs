@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 public class PlayerModel
 {
-    int Id { get; set; }
-    int Deck_Id { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public int Deck_Id { get; set; }
 }
