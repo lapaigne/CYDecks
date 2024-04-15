@@ -25,6 +25,7 @@ public partial class GameManager : Node2D
         cardManager.Opponent = Opponent;
 
         cardManager.PlayerDraw = new Queue<Card>();
+        cardManager.OpponentDraw = new Queue<Card>();
         var rnd = new RandomNumberGenerator();
 
         for (int i = 0; i < 15; i++)
@@ -34,7 +35,11 @@ public partial class GameManager : Node2D
             {
                 case 3:
                     cardManager.PlayerDraw.Enqueue(
-                        new Card { Data = new StandardCardData{ Id = number, Health = -1 }, State = SlotType.Draw }
+                        new Card
+                        {
+                            Data = new StandardCardData { Id = number, Health = -1 },
+                            State = SlotType.Draw
+                        }
                     );
                     break;
                 case 18:
