@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctyy5wjabeobf"]
+
+[ext_resource type="Script" path="res://scenes/MultiplayerClient/MultiplayerClient.cs" id="1_2c4nq"]
+
+[node name="MultiplayerClient" type="Node2D"]
+script = ExtResource("1_2c4nq")

@@ -13,7 +13,9 @@ public partial class GameManager : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _context = new GameContext();
+        // _context = new GameContext();
+
+        
         
         // get initial data from server
         Player = new PlayerData { Health = 15 };
