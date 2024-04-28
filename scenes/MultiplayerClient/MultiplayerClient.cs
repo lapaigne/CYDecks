@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
@@ -8,7 +10,7 @@ public partial class MultiplayerClient : Node2D
     // Called when the node enters the scene tree for the first time.
     public override async void _Ready()
     {
-        await TryConnecting();
+        await Task.Run(async () => await TryConnecting());
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -16,13 +18,28 @@ public partial class MultiplayerClient : Node2D
 
     public static async Task TryConnecting()
     {
-        using TcpClient tcpClient = new TcpClient();
-        GD.Print("Клиент запущен");
-        await tcpClient.ConnectAsync("5.253.62.130", 8888);
+        var words = new string[] { "red", "yellow", "blue", "green" };
 
-        if (tcpClient.Connected)
-            GD.Print($"Подключение с {tcpClient.Client.RemoteEndPoint} установлено");
-        else
-            GD.Print("Не удалось подключиться");
+        using var tcpClient = new TcpClient();
+        await tcpClient.ConnectAsync("5.253.62.130", 8888);
+        var stream = tcpClient.GetStream();
+
+        var response = new List<byte>();
+        int bytesRead;
+        foreach (var word in words)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(word + '\n');
+            await stream.WriteAsync(data);
+
+            while ((bytesRead = stream.ReadByte()) != '\n')
+            {
+                response.Add((byte)bytesRead);
+            }
+
+            var result = Encoding.UTF8.GetString(response.ToArray());
+            GD.Print($"Слово {word}: {result}");
+            response.Clear();
+        }
+        await stream.WriteAsync(Encoding.UTF8.GetBytes("END\n"));
     }
 }
