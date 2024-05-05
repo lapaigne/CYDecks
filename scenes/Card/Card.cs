@@ -3,13 +3,19 @@ using System.Data;
 using System.Linq;
 using Godot;
 
-public partial class Card : Node2D
+public partial class Card : CharacterBody2D
 {
+    [Signal]
+    public delegate void OnCardClickEventHandler(Card card);
+
     [Export]
     public CardData Data;
 
     [Export]
-    public SlotType State;
+    public SlotType CurrentState;
+
+    [Export]
+    public SlotType NextState;
 
     [Export]
     public int OwnerId;
@@ -17,132 +23,39 @@ public partial class Card : Node2D
     [Export]
     public bool CanClick = true;
     public bool isMoving;
-    public bool isHovered;
-    public bool targetSelected;
+    public bool hasMouse;
     public double timeEnRoute;
-    public Vector2 Velocity;
     public Slot Slot = null;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() { }
 
-    public override void _Process(double delta)
-    {
-        // move to state switching
-        var sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-        sprite.Frame = (State == SlotType.Draw || State == SlotType.Shop) ? 1 : Data.Id;
-    }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public bool TrySelectingNewPosition(PlayerData player, PlayerData opponent)
-    {
-        if (!targetSelected)
-        {
-            var parent = GetParent<CardManager>();
-            var slots = parent
-                .GetNode<Node2D>("SlotArray")
-                .GetChildren()
-                .OfType<Slot>()
-                .Where(slot => slot.OwnerId == OwnerId || OwnerId == -1);
-            // var _slots = slots.Where(child => child is Slot);
-            var available = new List<Slot>();
-            switch (State)
-            {
-                case SlotType.Draw:
-                    available = new List<Slot>(slots.Where(slot => slot.Type == SlotType.Hand));
-                    break;
-
-                case SlotType.Hand:
-                    available = new List<Slot>(slots.Where(slot => slot.Type == SlotType.Play));
-                    break;
-
-                case SlotType.Play:
-                    available = new List<Slot>(
-                        slots.Where(slots => slots.Type == SlotType.Discard)
-                    );
-                    break;
-
-                case SlotType.Discard:
-                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Draw));
-                    break;
-
-                case SlotType.Shop:
-                    available = new List<Slot>(slots.Where(slots => slots.Type == SlotType.Draw));
-                    break;
-            }
-
-            if (available.Count() > 0)
-            {
-                for (int i = 0; i < available.Count(); i++)
-                {
-                    if (!available[i].isOccupied)
-                    {
-                        if (Slot != null)
-                        {
-                            Slot.isOccupied = false;
-                        }
-                        Slot = available[i];
-                        ZIndex = i;
-                        targetSelected = true;
-                        Velocity = Slot.Position - GlobalPosition;
-                        isMoving = true;
-
-                        switch (State)
-                        {
-                            case SlotType.Draw:
-                                available[i].isOccupied = true;
-                                State = SlotType.Hand;
-                                break;
-
-                            case SlotType.Hand:
-                                available[i].isOccupied = true;
-                                Data.OnPlayEffect(player, opponent);
-                                State++;
-                                break;
-
-                            case SlotType.Play:
-                                if (Data.Destroy)
-                                {
-                                    Visible = false;
-                                    CanClick = false;
-                                    break;
-                                }
-                                State++;
-                                break;
-
-                            case SlotType.Shop:
-                                State = SlotType.Draw;
-                                break;
-
-                            default:
-                                Slot.isOccupied = false;
-                                State++;
-                                break;
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-            else
-            {
-                GD.Print("no free slots were found");
-                return false;
-            }
-        }
-        return false;
-    }
+    public override void _Process(double delta) { }
 
     public void OnMouseEntered()
     {
-        // GD.Print("entered");
-        isHovered = true;
-        // GD.Print(State);
+        hasMouse = true;
     }
 
     public void OnMouseExited()
     {
-        // GD.Print("exited");
-        isHovered = false;
+        hasMouse = false;
+    }
+
+    public void Destroy()
+    {
+        GD.Print("Card Destroyed");
+        // Visible = false;
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton inputEventMouseButton)
+        {
+            if (inputEventMouseButton.Pressed && hasMouse)
+            {
+                EmitSignal("OnCardClick", this);
+            }
+        }
     }
 }

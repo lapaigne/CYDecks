@@ -6,13 +6,13 @@ using Godot;
 public partial class BankCardData : CardData
 {
     [Export]
-    public int Duration;
+    public int Duration = 4;
 
     [Export]
-    public int Initial;
+    public int Initial = 10;
 
     [Export]
-    public int Regular;
+    public int Regular = 3;
     private int _playCounter;
 
     public BankCardData()
@@ -31,11 +31,11 @@ public partial class BankCardData : CardData
         GD.Print(_playCounter);
         if (_playCounter == 0)
         {
-            player.Money += 10;
+            player.Money += Initial;
         }
-        else if (_playCounter <= 4)
+        else if (_playCounter <= Duration)
         {
-            player.Money -= 3;
+            player.Money -= Regular;
             if (player.Money < 0)
             {
                 player.Health += player.Money;
@@ -51,9 +51,4 @@ public partial class BankCardData : CardData
     public override void OnClickEffect(PlayerData player = null, PlayerData opponent = null) { }
 
     public override void OnDiscardEffect(PlayerData player = null, PlayerData opponent = null) { }
-
-    public override void OnDamageTakenEffect(
-        PlayerData player = null,
-        PlayerData opponent = null
-    ) { }
 }

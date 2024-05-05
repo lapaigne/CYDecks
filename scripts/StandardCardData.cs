@@ -31,6 +31,4 @@ public partial class StandardCardData : CardData
     public override void OnClickEffect(PlayerData player = null, PlayerData opponent = null) { }
 
     public override void OnDiscardEffect(PlayerData player = null, PlayerData opponent = null) { }
-
-    public override void OnDamageTakenEffect(PlayerData player = null, PlayerData opponent = null) { }
 }

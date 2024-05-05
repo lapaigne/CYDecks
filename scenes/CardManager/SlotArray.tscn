@@ -6,122 +6,121 @@
 
 [node name="Shop" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(344, 156)
-Type = 4
 OwnerId = -1
 
 [node name="PHand0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(164, 306)
-Type = 0
+Type = 1
 
 [node name="PHand1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(184, 306)
-Type = 0
+Type = 1
 
 [node name="PHand2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(204, 306)
-Type = 0
+Type = 1
 
 [node name="PHand3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(224, 306)
-Type = 0
+Type = 1
 
 [node name="PHand4" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(244, 306)
-Type = 0
+Type = 1
 
 [node name="PHand5" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(264, 306)
-Type = 0
+Type = 1
 
 [node name="PHand6" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(284, 306)
-Type = 0
+Type = 1
 
 [node name="OHand0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(164, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(184, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(204, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(224, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand4" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(244, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand5" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(264, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="OHand6" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(284, 6)
-Type = 0
+Type = 1
 OwnerId = 1
 
 [node name="PPlay0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(164, 186)
-Type = 1
+Type = 2
 
 [node name="PPlay1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(204, 186)
-Type = 1
+Type = 2
 
 [node name="PPlay2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(244, 186)
-Type = 1
+Type = 2
 
 [node name="PPlay3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(284, 186)
-Type = 1
+Type = 2
 
 [node name="OPlay0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(164, 126)
-Type = 1
+Type = 2
 OwnerId = 1
 
 [node name="OPlay1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(204, 126)
-Type = 1
+Type = 2
 OwnerId = 1
 
 [node name="OPlay2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(244, 126)
-Type = 1
+Type = 2
 OwnerId = 1
 
 [node name="OPlay3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(284, 126)
-Type = 1
+Type = 2
 OwnerId = 1
 
 [node name="PDiscard" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(86, 186)
-Type = 2
+Type = 3
 
 [node name="ODiscard" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(86, 126)
-Type = 2
+Type = 3
 OwnerId = 1
 
 [node name="PDraw" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(6, 246)
-Type = 3
+Type = 4
 
 [node name="ODraw" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(6, 66)
-Type = 3
+Type = 4
 OwnerId = 1

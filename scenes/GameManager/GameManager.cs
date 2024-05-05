@@ -24,32 +24,32 @@ public partial class GameManager : Node2D
         cardManager.Player = Player;
         cardManager.Opponent = Opponent;
 
-        cardManager.PlayerDraw = new Queue<Card>();
-        cardManager.OpponentDraw = new Queue<Card>();
+        cardManager.PlayerDeck = new Queue<Card>();
+        cardManager.OpponentDeck = new Queue<Card>();
         var rnd = new RandomNumberGenerator();
 
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 1; i++)
         {
             var number = rnd.RandiRange(0, 19);
             switch (number)
             {
                 case 3:
-                    cardManager.PlayerDraw.Enqueue(
+                    cardManager.PlayerDeck.Enqueue(
                         new Card
                         {
                             Data = new StandardCardData { Id = number, Health = -1 },
-                            State = SlotType.Draw
+                            CurrentState = SlotType.Draw
                         }
                     );
                     break;
                 case 18:
-                    cardManager.PlayerDraw.Enqueue(
-                        new Card { Data = new BankCardData(number), State = SlotType.Draw }
+                    cardManager.PlayerDeck.Enqueue(
+                        new Card { Data = new BankCardData(number), CurrentState = SlotType.Draw }
                     );
                     break;
                 default:
-                    cardManager.PlayerDraw.Enqueue(
-                        new Card { Data = new CardData(number), State = SlotType.Draw }
+                    cardManager.PlayerDeck.Enqueue(
+                        new Card { Data = new CardData(number), CurrentState = SlotType.Draw }
                     );
                     break;
             }

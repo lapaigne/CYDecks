@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/CardManager/CardManager.cs" id="1_va62f"]
 [ext_resource type="PackedScene" uid="uid://blx2m3ktjdi8e" path="res://scenes/CardManager/SlotArray.tscn" id="5_5ty6c"]
 
-[node name="CardManager" type="Node2D"]
+[node name="CardManager" type="Area2D"]
 script = ExtResource("1_va62f")
 
 [node name="SlotArray" parent="." instance=ExtResource("5_5ty6c")]

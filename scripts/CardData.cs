@@ -6,7 +6,8 @@ public partial class CardData : Resource
 {
     [Export]
     public int Id;
-    public bool Destroy; 
+    public bool Destroy;
+    public bool Locked;
 
     public CardData()
     {
@@ -26,6 +27,4 @@ public partial class CardData : Resource
     public virtual void OnClickEffect(PlayerData player = null, PlayerData opponent = null) { }
 
     public virtual void OnDiscardEffect(PlayerData player = null, PlayerData opponent = null) { }
-
-    public virtual void OnDamageTakenEffect(PlayerData player = null, PlayerData opponent = null) { }
 }
