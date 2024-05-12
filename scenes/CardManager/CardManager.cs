@@ -7,7 +7,6 @@ using Godot;
 
 public partial class CardManager : Area2D
 {
-    public List<Card> Shop;
     public Queue<Card> PlayerDeck;
     public Queue<Card> OpponentDeck;
     private double _coolDown;
@@ -54,7 +53,6 @@ public partial class CardManager : Area2D
         GD.Print("Clicked");
         switch (card.CurrentState)
         {
-            case SlotType.Hand:
             case SlotType.Draw:
                 TrySelectingNewSlot(card, Player, Opponent);
                 break;
@@ -102,16 +100,6 @@ public partial class CardManager : Area2D
 
         switch (card.CurrentState)
         {
-            case SlotType.Hand:
-                slots = GetFreeSlots(card, SlotType.Play);
-                if (slots.Count > 0)
-                {
-                    card.Slot = slots[0];
-                    slots[0].isOccupied = true;
-                    card.NextState = SlotType.Play;
-                    card.Data.OnPlayEffect(player, opponent);
-                }
-                break;
             case SlotType.Play:
                 if (card.Data.Locked)
                 {
@@ -148,18 +136,13 @@ public partial class CardManager : Area2D
 
                 break;
             case SlotType.Draw:
-                slots = GetFreeSlots(card, SlotType.Hand);
+                slots = GetFreeSlots(card, SlotType.Play);
                 if (slots.Count > 0)
                 {
                     card.Slot = slots[0];
                     slots[0].isOccupied = true;
-                    card.NextState = SlotType.Hand;
+                    card.NextState = SlotType.Play;
                 }
-                break;
-            case SlotType.Shop:
-
-                // todo
-
                 break;
             case SlotType.None:
 

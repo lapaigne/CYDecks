@@ -4,11 +4,9 @@ using Godot;
 public enum SlotType
 {
     None,
-    Hand,
     Play,
     Discard,
-    Draw,
-    Shop
+    Draw
 }
 
 public partial class Slot : Node2D

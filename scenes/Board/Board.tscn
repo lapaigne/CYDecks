@@ -1,18 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://c2l11h5q5p3ht"]
+[gd_scene load_steps=6 format=3 uid="uid://c2l11h5q5p3ht"]
 
-[ext_resource type="Texture2D" uid="uid://cnkn8iathytad" path="res://assets/board2.png" id="1_um2dy"]
+[ext_resource type="Texture2D" uid="uid://dx3h1kictibku" path="res://assets/checkedboard256x144.png" id="1_0p33l"]
 [ext_resource type="PackedScene" uid="uid://yq7sk2881he4" path="res://scenes/GameManager/GameManager.tscn" id="2_567tw"]
-[ext_resource type="PackedScene" uid="uid://ctian655ij62l" path="res://scenes/DisplayManager/DisplayManager.tscn" id="3_l048t"]
 [ext_resource type="PackedScene" uid="uid://11oj1tawurep" path="res://scenes/CardManager/CardManager.tscn" id="3_x2g6t"]
 [ext_resource type="PackedScene" uid="uid://c2lnvndjftcpp" path="res://scenes/Debug/Debug.tscn" id="4_8fmpc"]
-[ext_resource type="PackedScene" uid="uid://domumyu5hkpt7" path="res://scenes/GameButtons/StandButton.tscn" id="7_rqtkp"]
+[ext_resource type="PackedScene" uid="uid://ctyy5wjabeobf" path="res://scenes/MultiplayerClient/MultiplayerClient.tscn" id="5_jaasf"]
 
 [node name="Board" type="Node2D"]
 
 [node name="BoardSprite" type="Sprite2D" parent="."]
 texture_repeat = 2
-position = Vector2(240, 180)
-texture = ExtResource("1_um2dy")
+position = Vector2(128, 72)
+texture = ExtResource("1_0p33l")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -22,13 +21,6 @@ editor_draw_limits = true
 
 [node name="CardManager" parent="." instance=ExtResource("3_x2g6t")]
 
-[node name="DisplayManager" parent="." instance=ExtResource("3_l048t")]
-
 [node name="Debug" parent="." instance=ExtResource("4_8fmpc")]
-visible = false
 
-[node name="Button" parent="." instance=ExtResource("7_rqtkp")]
-offset_left = 91.0
-offset_top = 312.0
-offset_right = 152.0
-offset_bottom = 343.0
+[node name="MultiplayerClient" parent="." instance=ExtResource("5_jaasf")]

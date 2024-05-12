@@ -5,41 +5,97 @@ using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
-public partial class MultiplayerClient : Node2D
+public enum ActionMode
 {
+    Stand,
+    More
+}
+
+public partial class MultiplayerClient : Node
+{
+    [Export]
+    public bool isServer;
+    private ENetMultiplayerPeer peer;
+    private int port;
+    private string address;
+
     // Called when the node enters the scene tree for the first time.
-    public override async void _Ready()
+    public override void _Ready()
     {
-        await Task.Run(async () => await TryConnecting());
+        if (isServer)
+        {
+            StartServer();
+        }
+        else
+        {
+            StartClient();
+        }
+    }
+
+    private void StartClient()
+    {
+        peer = new ENetMultiplayerPeer();
+        port = 9999;
+        address = "127.0.0.1";
+
+        peer.CreateClient(address, port);
+        peer.Host.Compress(ENetConnection.CompressionMode.Fastlz);
+        Multiplayer.MultiplayerPeer = peer;
+
+        GD.Print("Trying to connect...");
+    }
+
+    private void StartServer()
+    {
+        port = 9999;
+        peer = new ENetMultiplayerPeer();
+
+        peer.CreateServer(port);
+        peer.Host.Compress(ENetConnection.CompressionMode.Fastlz);
+        Multiplayer.MultiplayerPeer = peer;
+
+        GD.Print("Server started");
+
+        peer.PeerConnected += OnPeerConnected;
+        peer.PeerDisconnected += OnPeerDisconnected;
+    }
+
+    private void OnPeerConnected(long peerId)
+    {
+        GD.Print($"Peer {peerId} connected");
+    }
+
+    private void OnPeerDisconnected(long peerId)
+    {
+        GD.Print($"Peer {peerId} disconnected");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta) { }
 
-    public static async Task TryConnecting()
+    public void OnStandBtnPressed()
     {
-        var words = new string[] { "red", "yellow", "blue", "green" };
+        GD.Print("ENUF!!!");
+        SendAction(ActionMode.Stand);
+    }
 
-        using var tcpClient = new TcpClient();
-        await tcpClient.ConnectAsync("5.253.62.130", 8888);
-        var stream = tcpClient.GetStream();
+    public void OnMoreBtnPressed()
+    {
+        GD.Print("MOAR!!1");
+        SendAction(ActionMode.More);
+    }
 
-        var response = new List<byte>();
-        int bytesRead;
-        foreach (var word in words)
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+    private void SendAction(ActionMode action)
+    {
+        if (isServer)
         {
-            byte[] data = Encoding.UTF8.GetBytes(word + '\n');
-            await stream.WriteAsync(data);
-
-            while ((bytesRead = stream.ReadByte()) != '\n')
-            {
-                response.Add((byte)bytesRead);
-            }
-
-            var result = Encoding.UTF8.GetString(response.ToArray());
-            GD.Print($"Слово {word}: {result}");
-            response.Clear();
+            GD.Print($"data is {action}");
         }
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("END\n"));
+        else
+        {
+            GD.Print($"Sending data: action: {action}\t");
+            RpcId(1, nameof(SendAction), (int)action); //sends data only to server
+        }
     }
 }

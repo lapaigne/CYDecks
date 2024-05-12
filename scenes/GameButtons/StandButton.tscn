@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://domumyu5hkpt7"]
-
-[ext_resource type="Script" path="res://scenes/GameButtons/StandButton.cs" id="1_g6lok"]
-
-[node name="Button" type="Button"]
-offset_right = 8.0
-offset_bottom = 8.0
-text = "STAND"
-script = ExtResource("1_g6lok")

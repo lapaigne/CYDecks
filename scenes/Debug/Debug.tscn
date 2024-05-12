@@ -4,6 +4,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_heks0"]
 generate_mipmaps = true
+subpixel_positioning = 0
 msdf_pixel_range = 64
 
 [sub_resource type="LabelSettings" id="LabelSettings_s3ive"]
