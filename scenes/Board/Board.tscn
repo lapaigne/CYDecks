@@ -21,42 +21,6 @@ editor_draw_limits = true
 
 [node name="CardManager" parent="." instance=ExtResource("3_x2g6t")]
 
-[node name="PPlay0" parent="CardManager/SlotArray" index="0"]
-position = Vector2(87, 114)
-
-[node name="PPlay1" parent="CardManager/SlotArray" index="1"]
-position = Vector2(125, 114)
-
-[node name="PPlay2" parent="CardManager/SlotArray" index="2"]
-position = Vector2(163, 114)
-
-[node name="PPlay3" parent="CardManager/SlotArray" index="3"]
-position = Vector2(201, 114)
-
-[node name="OPlay0" parent="CardManager/SlotArray" index="4"]
-position = Vector2(87, 18)
-
-[node name="OPlay1" parent="CardManager/SlotArray" index="5"]
-position = Vector2(125, 18)
-
-[node name="OPlay2" parent="CardManager/SlotArray" index="6"]
-position = Vector2(163, 18)
-
-[node name="OPlay3" parent="CardManager/SlotArray" index="7"]
-position = Vector2(201, 18)
-
-[node name="PDiscard" parent="CardManager/SlotArray" index="8"]
-position = Vector2(272, 114)
-
-[node name="ODiscard" parent="CardManager/SlotArray" index="9"]
-position = Vector2(272, 18)
-
-[node name="PDraw" parent="CardManager/SlotArray" index="10"]
-position = Vector2(16, 114)
-
-[node name="ODraw" parent="CardManager/SlotArray" index="11"]
-position = Vector2(16, 18)
-
 [node name="Debug" parent="." instance=ExtResource("4_8fmpc")]
 
 [node name="MultiplayerClient" parent="." instance=ExtResource("5_jaasf")]
@@ -65,5 +29,18 @@ offset_top = -71.0
 offset_right = -3.0
 offset_bottom = -71.0
 
-[editable path="CardManager"]
-[editable path="CardManager/SlotArray"]
+[node name="StandBtn" parent="MultiplayerClient" index="0"]
+clip_contents = true
+offset_left = 235.0
+offset_top = 145.0
+offset_right = 307.0
+offset_bottom = 177.0
+
+[node name="MoreBtn" parent="MultiplayerClient" index="1"]
+clip_contents = true
+offset_left = 19.0
+offset_top = 145.0
+offset_right = 91.0
+offset_bottom = 177.0
+
+[editable path="MultiplayerClient"]
