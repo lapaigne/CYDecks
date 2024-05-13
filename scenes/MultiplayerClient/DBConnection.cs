@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using MySqlConnector;
 partial class DBConnection
@@ -24,7 +23,6 @@ partial class DBConnection
     {
         if (Connection == null)
         {
-            GD.Print("first try");
             if (string.IsNullOrEmpty(Database))
             {
                 return false;

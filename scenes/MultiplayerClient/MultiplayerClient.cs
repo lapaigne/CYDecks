@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Godot;
 using MySqlConnector;
 
@@ -15,6 +14,7 @@ public partial class MultiplayerClient : Node
     private ENetMultiplayerPeer peer;
     private int port;
     private string address;
+    private DBConnection dbConnection;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -61,7 +61,8 @@ public partial class MultiplayerClient : Node
 
     private void DBConnect()
     {
-        var dbConnection = DBConnection.Instance();
+        dbConnection = DBConnection.Instance();
+        dbConnection.TryConnecting();
 
         if (dbConnection.TryConnecting())
         {
@@ -69,14 +70,14 @@ public partial class MultiplayerClient : Node
             var command = new MySqlCommand(query, dbConnection.Connection);
             var reader = command.ExecuteReader();
 
-            GD.Print(dbConnection.Connection.State);
-
             while (reader.Read())
             {
                 GD.Print(
                     $"{reader.GetValue(1)}\t{reader.GetValue(2)}\t{reader.GetValue(3)}\t{reader.GetValue(4)}\t{reader.GetValue(5)}"
                 );
             }
+
+            
         }
     }
 
@@ -89,9 +90,6 @@ public partial class MultiplayerClient : Node
     {
         GD.Print($"Peer {peerId} disconnected");
     }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta) { }
 
     public void OnDBConnectBtnPressed()
     {
