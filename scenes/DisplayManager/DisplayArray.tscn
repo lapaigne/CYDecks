@@ -4,25 +4,25 @@
 [ext_resource type="PackedScene" uid="uid://csgpx107ghhr3" path="res://scenes/SDD/SDD.tscn" id="2_brmou"]
 [ext_resource type="Shader" path="res://resources/shaders/DisplayShader.gdshader" id="3_cwbw5"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jrjbm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gnttj"]
 resource_local_to_scene = true
 shader = ExtResource("3_cwbw5")
 shader_parameter/origin = Color(1, 1, 1, 1)
 shader_parameter/new = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_e126c"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbck0"]
 resource_local_to_scene = true
 shader = ExtResource("3_cwbw5")
 shader_parameter/origin = Color(1, 1, 1, 1)
 shader_parameter/new = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wdq2s"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o4qg3"]
 resource_local_to_scene = true
 shader = ExtResource("3_cwbw5")
 shader_parameter/origin = Color(1, 1, 1, 1)
 shader_parameter/new = null
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tuhqi"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnawx"]
 resource_local_to_scene = true
 shader = ExtResource("3_cwbw5")
 shader_parameter/origin = Color(1, 1, 1, 1)
@@ -33,23 +33,23 @@ script = ExtResource("1_nom4a")
 
 [node name="Health" parent="." instance=ExtResource("2_brmou")]
 texture_repeat = 2
-material = SubResource("ShaderMaterial_jrjbm")
+material = SubResource("ShaderMaterial_gnttj")
 Color = Color(1, 0.14902, 0.14902, 1)
 
 [node name="Money" parent="." instance=ExtResource("2_brmou")]
 texture_repeat = 2
-material = SubResource("ShaderMaterial_e126c")
+material = SubResource("ShaderMaterial_wbck0")
 position = Vector2(36, 0)
 Color = Color(0.984314, 0.94902, 0.211765, 1)
 
 [node name="Shield" parent="." instance=ExtResource("2_brmou")]
 texture_repeat = 2
-material = SubResource("ShaderMaterial_wdq2s")
+material = SubResource("ShaderMaterial_o4qg3")
 position = Vector2(72, 0)
 Color = Color(0.6, 0.898039, 0.313726, 1)
 
 [node name="Damage" parent="." instance=ExtResource("2_brmou")]
 texture_repeat = 2
-material = SubResource("ShaderMaterial_tuhqi")
+material = SubResource("ShaderMaterial_tnawx")
 position = Vector2(108, 0)
 Color = Color(0.356863, 0.431373, 0.882353, 1)
