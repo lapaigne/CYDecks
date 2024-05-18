@@ -9,8 +9,6 @@ public partial class CardManager : Area2D
 {
     public Queue<Card> PlayerDeck;
     public Queue<Card> OpponentDeck;
-    private double _coolDown;
-
     public PlayerData Player;
     public PlayerData Opponent;
     private PackedScene cardScene;
@@ -21,20 +19,11 @@ public partial class CardManager : Area2D
         cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
         foreach (Card card in PlayerDeck)
         {
-            // todo: move instantiate into game manager to make PlayerDeck and /-/ useful
             AddCard(card);
         }
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _PhysicsProcess(double delta)
-    {
-        // var list = GetChildren().OfType<Card>().ToList();
-        // foreach (var card in list)
-        // {
-        //     card.TryMoving(delta);
-        // }
-    }
+    public override void _PhysicsProcess(double delta) { }
 
     public void AddCard(Card card)
     {
@@ -50,18 +39,15 @@ public partial class CardManager : Area2D
 
     private void OnCardClick(Card card)
     {
-        GD.Print($"Clicked: {card.Data.Id}");
-        GD.Print($"Current: {card.CurrentState}");
-        GD.Print($"Next: {card.NextState}");
-        GD.Print($"Locked: {card.Data.Locked}");
-        GD.Print($"Destroy: {card.Data.Destroy}\n");
+        // GD.Print($"Clicked: {card.Data.Id}");
+        // GD.Print($"Current: {card.CurrentState}");
+        // GD.Print($"Next: {card.NextState}");
+        // GD.Print($"Locked: {card.Data.Locked}");
+        // GD.Print($"Destroy: {card.Data.Destroy}\n");
 
         TrySelectingNewSlot(card, Player, Opponent);
         switch (card.CurrentState)
         {
-            case SlotType.Draw:
-                GD.Print(GetChildren().OfType<Card>().ToList().Count);
-                break;
             case SlotType.Play:
                 card.Data.OnClickEffect();
                 break;
@@ -79,8 +65,6 @@ public partial class CardManager : Area2D
 
         var slots = new List<Slot>();
 
-        // GD.Print(card.CurrentState);
-
         switch (card.CurrentState)
         {
             case SlotType.Play:
@@ -90,12 +74,10 @@ public partial class CardManager : Area2D
                 }
                 else if (card.Data.Destroy)
                 {
-                    // card.QueueFree();
                     card.Destroy();
                 }
                 else
                 {
-                    GD.Print("here");
                     slots = GetFreeSlots(card, SlotType.Discard);
                     card.Slot.isOccupied = false;
                     card.Slot = slots[0];
@@ -110,8 +92,6 @@ public partial class CardManager : Area2D
                     .Where(_card => _card.OwnerId == card.OwnerId || card.OwnerId == -1)
                     .Where(_card => _card.CurrentState == SlotType.Draw)
                     .Count();
-                
-                GD.Print(leftInDrawPile);
 
                 if (leftInDrawPile == 0)
                 {
@@ -126,22 +106,12 @@ public partial class CardManager : Area2D
                 break;
             case SlotType.Draw:
                 slots = GetFreeSlots(card, SlotType.Play);
-
-                GD.Print(slots.Count);
-
                 if (slots.Count > 0)
                 {
                     card.Slot = slots[0];
                     slots[0].isOccupied = true;
                     card.NextState = SlotType.Play;
-
-                    GD.Print(card.Slot);
                 }
-                break;
-            case SlotType.None:
-
-                // todo
-
                 break;
             default:
                 return false;

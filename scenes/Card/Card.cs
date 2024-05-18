@@ -24,35 +24,33 @@ public partial class Card : CharacterBody2D
     public bool CanClick = true;
     public bool isMoving;
     public bool hasMouse;
-    public double timeEnRoute;
     public Slot Slot = null;
+    public double timeEnRoute;
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready() { 
+    public override void _Ready()
+    {
         GetNode<AnimatedSprite2D>("AnimatedSprite2D").Frame = Data.Id;
     }
 
-    public override void _Process(double delta) {
-
+    public override void _Process(double delta)
+    {
         TryMoving(delta);
-     }
+    }
 
     public bool TryMoving(double delta)
     {
-        if (Slot == null)
+        if (Slot == null || NextState == SlotType.None)
         {
             return false;
         }
 
-        // var delta = GetPhysicsProcessDeltaTime();
-
-        // GD.Print(delta);
-
         timeEnRoute += delta;
-        var distance = Slot.Position.DistanceTo(GlobalPosition);
-        if (distance > 2 && timeEnRoute <= 0.2)
+        
+        Velocity = Slot.Position - GlobalPosition;
+        if (Velocity.Length() > 2 && timeEnRoute <= 0.1f)
         {
-            Translate(Velocity * (float)delta / 0.2f);
+            Translate(Velocity * (float)delta / 0.05f);
         }
         else
         {
@@ -62,7 +60,6 @@ public partial class Card : CharacterBody2D
             isMoving = false;
             timeEnRoute = 0;
             return true;
-
         }
 
         return false;

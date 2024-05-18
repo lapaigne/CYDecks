@@ -10,6 +10,8 @@ public partial class GameManager : Node2D
     public PlayerData Opponent;
 
     // Called when the node enters the scene tree for the first time.
+
+    // get rid of this class, 'tis useless
     public override void _Ready()
     {
         // get initial data from server
