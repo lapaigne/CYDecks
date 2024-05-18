@@ -16,9 +16,9 @@ public partial class GameManager : Node2D
         Player = new PlayerData { Health = 15 };
         Opponent = new PlayerData();
 
-        var displayManager = GetNode<DisplayManager>("/root/Board/DisplayManager");
-        displayManager.Player = Player;
-        displayManager.Opponent = Opponent;
+        // var displayManager = GetNode<DisplayManager>("/root/Board/DisplayManager");
+        // displayManager.Player = Player;
+        // displayManager.Opponent = Opponent;
 
         var cardManager = GetNode<CardManager>("/root/Board/CardManager");
         cardManager.Player = Player;
@@ -33,13 +33,9 @@ public partial class GameManager : Node2D
             var number = rnd.RandiRange(0, 19);
             switch (number)
             {
-                case 3:
+                case 0:
                     cardManager.PlayerDeck.Enqueue(
-                        new Card
-                        {
-                            Data = new StandardCardData { Id = number, Health = -1 },
-                            CurrentState = SlotType.Draw
-                        }
+                        new Card { Data = new CardData(number), CurrentState = SlotType.Draw }
                     );
                     break;
                 case 18:
@@ -49,8 +45,13 @@ public partial class GameManager : Node2D
                     break;
                 default:
                     cardManager.PlayerDeck.Enqueue(
-                        new Card { Data = new CardData(number), CurrentState = SlotType.Draw }
+                        new Card
+                        {
+                            Data = new StandardCardData { Id = number, Health = -1 },
+                            CurrentState = SlotType.Draw
+                        }
                     );
+
                     break;
             }
         }

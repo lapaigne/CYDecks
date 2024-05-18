@@ -6,54 +6,54 @@
 
 [node name="PPlay0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(87, 114)
-Type = 2
+Type = 1
 
 [node name="PPlay1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(125, 114)
-Type = 2
+Type = 1
 
 [node name="PPlay2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(163, 114)
-Type = 2
+Type = 1
 
 [node name="PPlay3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(201, 114)
-Type = 2
+Type = 1
 
 [node name="OPlay0" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(87, 18)
-Type = 2
+Type = 1
 OwnerId = 1
 
 [node name="OPlay1" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(125, 18)
-Type = 2
+Type = 1
 OwnerId = 1
 
 [node name="OPlay2" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(163, 18)
-Type = 2
+Type = 1
 OwnerId = 1
 
 [node name="OPlay3" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(201, 18)
-Type = 2
+Type = 1
 OwnerId = 1
 
 [node name="PDiscard" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(272, 114)
-Type = 3
+Type = 2
 
 [node name="ODiscard" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(272, 18)
-Type = 3
+Type = 2
 OwnerId = 1
 
 [node name="PDraw" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(16, 114)
-Type = 4
+Type = 3
 
 [node name="ODraw" parent="." instance=ExtResource("1_1bx5k")]
 position = Vector2(16, 18)
-Type = 4
+Type = 3
 OwnerId = 1

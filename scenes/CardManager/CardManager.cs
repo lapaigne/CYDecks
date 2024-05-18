@@ -29,11 +29,11 @@ public partial class CardManager : Area2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(double delta)
     {
-        var list = GetChildren().OfType<Card>().ToList();
-        foreach (var card in list)
-        {
-            TryMovingCard(card);
-        }
+        // var list = GetChildren().OfType<Card>().ToList();
+        // foreach (var card in list)
+        // {
+        //     card.TryMoving(delta);
+        // }
     }
 
     public void AddCard(Card card)
@@ -43,18 +43,24 @@ public partial class CardManager : Area2D
         instance.Data = card.Data;
         instance.Position = GetNode<Slot>("SlotArray/PDraw").Position;
 
-        instance.OnCardClick += onCardClick;
+        instance.OnCardClick += OnCardClick;
 
         AddChild(instance);
     }
 
-    private void onCardClick(Card card)
+    private void OnCardClick(Card card)
     {
-        GD.Print("Clicked");
+        GD.Print($"Clicked: {card.Data.Id}");
+        GD.Print($"Current: {card.CurrentState}");
+        GD.Print($"Next: {card.NextState}");
+        GD.Print($"Locked: {card.Data.Locked}");
+        GD.Print($"Destroy: {card.Data.Destroy}\n");
+
+        TrySelectingNewSlot(card, Player, Opponent);
         switch (card.CurrentState)
         {
             case SlotType.Draw:
-                TrySelectingNewSlot(card, Player, Opponent);
+                GD.Print(GetChildren().OfType<Card>().ToList().Count);
                 break;
             case SlotType.Play:
                 card.Data.OnClickEffect();
@@ -62,31 +68,6 @@ public partial class CardManager : Area2D
             default:
                 return;
         }
-    }
-
-    public bool TryMovingCard(Card card)
-    {
-        if (card.Slot == null)
-        {
-            return false;
-        }
-        var delta = GetPhysicsProcessDeltaTime();
-
-        card.timeEnRoute += delta;
-        var distance = card.Slot.Position.DistanceTo(card.GlobalPosition);
-        if (distance > 2 && card.timeEnRoute <= 0.2)
-        {
-            card.Translate(card.Velocity * (float)delta / 0.2f);
-        }
-        else
-        {
-            card.GlobalPosition = card.Slot.Position;
-            card.CurrentState = card.Slot.Type;
-            card.NextState = SlotType.None;
-            card.isMoving = false;
-            card.timeEnRoute = 0;
-        }
-        return false;
     }
 
     public bool TrySelectingNewSlot(Card card, PlayerData player, PlayerData opponent)
@@ -97,6 +78,8 @@ public partial class CardManager : Area2D
         }
 
         var slots = new List<Slot>();
+
+        // GD.Print(card.CurrentState);
 
         switch (card.CurrentState)
         {
@@ -112,7 +95,9 @@ public partial class CardManager : Area2D
                 }
                 else
                 {
+                    GD.Print("here");
                     slots = GetFreeSlots(card, SlotType.Discard);
+                    card.Slot.isOccupied = false;
                     card.Slot = slots[0];
                     card.NextState = SlotType.Discard;
                     card.Data.OnDiscardEffect();
@@ -121,27 +106,36 @@ public partial class CardManager : Area2D
             case SlotType.Discard:
                 var leftInDrawPile = GetNode<Node2D>("SlotArray")
                     .GetChildren()
-                    .OfType<Slot>()
-                    .Where(slot => slot.OwnerId == card.OwnerId || card.OwnerId == -1)
-                    .Where(slot => slot.Type == SlotType.Draw)
+                    .OfType<Card>()
+                    .Where(_card => _card.OwnerId == card.OwnerId || card.OwnerId == -1)
+                    .Where(_card => _card.CurrentState == SlotType.Draw)
                     .Count();
+                
+                GD.Print(leftInDrawPile);
 
                 if (leftInDrawPile == 0)
                 {
                     slots = GetFreeSlots(card, SlotType.Draw);
                     card.Slot = slots[0];
                     card.NextState = SlotType.Draw;
-                    break;
                 }
-
+                else
+                {
+                    return false;
+                }
                 break;
             case SlotType.Draw:
                 slots = GetFreeSlots(card, SlotType.Play);
+
+                GD.Print(slots.Count);
+
                 if (slots.Count > 0)
                 {
                     card.Slot = slots[0];
                     slots[0].isOccupied = true;
                     card.NextState = SlotType.Play;
+
+                    GD.Print(card.Slot);
                 }
                 break;
             case SlotType.None:
@@ -161,7 +155,7 @@ public partial class CardManager : Area2D
         return GetNode<Node2D>("SlotArray")
             .GetChildren()
             .OfType<Slot>()
-            .Where(slot => slot.OwnerId == card.OwnerId || card.OwnerId == -1)
+            .Where(slot => slot.OwnerId == card.OwnerId)
             .Where(slot => slot.Type == nextState)
             .Where(slot => !slot.isOccupied)
             .ToList();

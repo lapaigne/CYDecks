@@ -28,9 +28,45 @@ public partial class Card : CharacterBody2D
     public Slot Slot = null;
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready() { }
+    public override void _Ready() { 
+        GetNode<AnimatedSprite2D>("AnimatedSprite2D").Frame = Data.Id;
+    }
 
-    public override void _Process(double delta) { }
+    public override void _Process(double delta) {
+
+        TryMoving(delta);
+     }
+
+    public bool TryMoving(double delta)
+    {
+        if (Slot == null)
+        {
+            return false;
+        }
+
+        // var delta = GetPhysicsProcessDeltaTime();
+
+        // GD.Print(delta);
+
+        timeEnRoute += delta;
+        var distance = Slot.Position.DistanceTo(GlobalPosition);
+        if (distance > 2 && timeEnRoute <= 0.2)
+        {
+            Translate(Velocity * (float)delta / 0.2f);
+        }
+        else
+        {
+            GlobalPosition = Slot.Position;
+            CurrentState = Slot.Type;
+            NextState = SlotType.None;
+            isMoving = false;
+            timeEnRoute = 0;
+            return true;
+
+        }
+
+        return false;
+    }
 
     public void OnMouseEntered()
     {
