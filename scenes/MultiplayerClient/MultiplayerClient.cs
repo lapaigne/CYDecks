@@ -19,17 +19,9 @@ public partial class MultiplayerClient : Node
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        if (isServer)
-        {
-            StartServer();
-        }
-        else
-        {
-            StartClient();
-        }
     }
 
-    private void StartClient()
+    public void StartClient()
     {
         peer = new ENetMultiplayerPeer();
         port = 9999;
@@ -40,9 +32,10 @@ public partial class MultiplayerClient : Node
         Multiplayer.MultiplayerPeer = peer;
 
         GD.Print("Trying to connect...");
+        isServer = false;
     }
 
-    private void StartServer()
+    public void StartServer()
     {
         port = 9999;
         peer = new ENetMultiplayerPeer();
@@ -55,6 +48,8 @@ public partial class MultiplayerClient : Node
 
         peer.PeerConnected += OnPeerConnected;
         peer.PeerDisconnected += OnPeerDisconnected;
+
+        isServer = true;
 
         DBConnect();
     }

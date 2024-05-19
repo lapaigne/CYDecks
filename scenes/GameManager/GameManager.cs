@@ -22,7 +22,7 @@ public partial class GameManager : Node2D
         // displayManager.Player = Player;
         // displayManager.Opponent = Opponent;
 
-        var cardManager = GetNode<CardManager>("/root/Board/CardManager");
+        var cardManager = GetParent().GetNode<CardManager>("CardManager");
         cardManager.Player = Player;
         cardManager.Opponent = Opponent;
 
@@ -40,11 +40,13 @@ public partial class GameManager : Node2D
                         new Card { Data = new CardData(number), CurrentState = SlotType.Draw }
                     );
                     break;
+
                 case 18:
                     cardManager.PlayerDeck.Enqueue(
                         new Card { Data = new BankCardData(number), CurrentState = SlotType.Draw }
                     );
                     break;
+                    
                 default:
                     cardManager.PlayerDeck.Enqueue(
                         new Card
@@ -53,7 +55,6 @@ public partial class GameManager : Node2D
                             CurrentState = SlotType.Draw
                         }
                     );
-
                     break;
             }
         }
