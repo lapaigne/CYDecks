@@ -9,30 +9,26 @@ public enum ActionMode
 
 public partial class MultiplayerClient : Node
 {
-    [Export]
-    public bool isServer;
     private ENetMultiplayerPeer peer;
     private int port;
     private string address;
     private DBConnection dbConnection;
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-    }
+    public override void _Ready() { }
 
     public void StartClient()
     {
-        peer = new ENetMultiplayerPeer();
-        port = 9999;
         address = "127.0.0.1";
+
+        port = 9999;
+        peer = new ENetMultiplayerPeer();
 
         peer.CreateClient(address, port);
         peer.Host.Compress(ENetConnection.CompressionMode.Fastlz);
         Multiplayer.MultiplayerPeer = peer;
 
         GD.Print("Trying to connect...");
-        isServer = false;
     }
 
     public void StartServer()
@@ -49,31 +45,35 @@ public partial class MultiplayerClient : Node
         peer.PeerConnected += OnPeerConnected;
         peer.PeerDisconnected += OnPeerDisconnected;
 
-        isServer = true;
-
         DBConnect();
     }
 
     private void DBConnect()
     {
         dbConnection = DBConnection.Instance();
-        dbConnection.TryConnecting();
 
         if (dbConnection.TryConnecting())
         {
-            var query = "SELECT * FROM cydecks_db.standard_cards;"; // query string
-            var command = new MySqlCommand(query, dbConnection.Connection);
-            var reader = command.ExecuteReader();
-
-            while (reader.Read())
+            var list = GetCardsInDeck(1);
+            foreach (var e in list)
             {
-                GD.Print(
-                    $"{reader.GetValue(1)}\t{reader.GetValue(2)}\t{reader.GetValue(3)}\t{reader.GetValue(4)}\t{reader.GetValue(5)}"
-                );
+                GD.Print(e);
             }
-
-            
         }
+
+        // if (dbConnection.TryConnecting())
+        // {
+        //     var query = "SELECT * FROM cydecks_db.standard_cards;"; // query string
+        //     var command = new MySqlCommand(query, dbConnection.Connection);
+        //     var reader = command.ExecuteReader();
+
+        //     while (reader.Read())
+        //     {
+        //         GD.Print(
+        //             $"{reader.GetValue(1)}\t{reader.GetValue(2)}\t{reader.GetValue(3)}\t{reader.GetValue(4)}\t{reader.GetValue(5)}"
+        //         );
+        //     }
+        // }
     }
 
     private void OnPeerConnected(long peerId)
@@ -94,27 +94,11 @@ public partial class MultiplayerClient : Node
 
     public void OnStandBtnPressed()
     {
-        GD.Print("хватит");
-        SendAction(ActionMode.Stand);
+        RpcId(1, nameof(SendAction), (int)ActionMode.Stand);
     }
 
     public void OnMoreBtnPressed()
     {
-        GD.Print("еще");
-        SendAction(ActionMode.More);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    private void SendAction(ActionMode action)
-    {
-        if (isServer)
-        {
-            GD.Print($"data is {action}");
-        }
-        else
-        {
-            GD.Print($"Sending data: action: {action}\t");
-            RpcId(1, nameof(SendAction), (int)action); //sends data only to server
-        }
+        RpcId(1, nameof(SendAction), (int)ActionMode.More);
     }
 }

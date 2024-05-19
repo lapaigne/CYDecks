@@ -13,8 +13,8 @@ script = ExtResource("1_2c4nq")
 
 [node name="Client" type="Control" parent="."]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 320.0
+offset_bottom = 180.0
 
 [node name="BoardSprite" type="Sprite2D" parent="Client"]
 texture_repeat = 2
@@ -51,11 +51,10 @@ text = "ЕЩЕ"
 
 [node name="Server" type="Control" parent="."]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 320.0
+offset_bottom = 180.0
 
 [node name="Connect" type="Button" parent="Server"]
-visible = false
 layout_mode = 0
 offset_left = 277.0
 offset_top = 9.0

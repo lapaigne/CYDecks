@@ -1,5 +1,6 @@
 using Godot;
 using MySqlConnector;
+
 partial class DBConnection
 {
     public string Server { get; set; }
