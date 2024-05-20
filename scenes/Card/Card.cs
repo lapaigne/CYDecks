@@ -19,9 +19,6 @@ public partial class Card : CharacterBody2D
 
     [Export]
     public int OwnerId;
-
-    [Export]
-    public bool CanClick = true;
     public bool isMoving;
     public bool hasMouse;
     public Slot Slot = null;
@@ -67,6 +64,7 @@ public partial class Card : CharacterBody2D
 
     public void OnMouseEntered()
     {
+        GD.Print("in");
         hasMouse = true;
     }
 
@@ -87,6 +85,7 @@ public partial class Card : CharacterBody2D
         {
             if (inputEventMouseButton.Pressed && hasMouse)
             {
+                GD.Print("clicked");
                 EmitSignal("OnCardClick", this);
             }
         }

@@ -39,13 +39,14 @@ public partial class CardManager : Area2D
 
     private void OnCardClick(Card card)
     {
-        // GD.Print($"Clicked: {card.Data.Id}");
-        // GD.Print($"Current: {card.CurrentState}");
-        // GD.Print($"Next: {card.NextState}");
-        // GD.Print($"Locked: {card.Data.Locked}");
-        // GD.Print($"Destroy: {card.Data.Destroy}\n");
+        GD.Print($"Clicked: {card.Data.Id}");
+        GD.Print($"Current: {card.CurrentState}");
+        GD.Print($"Next: {card.NextState}");
+        GD.Print($"Locked: {card.Data.Locked}");
+        GD.Print($"Destroy: {card.Data.Destroy}\n");
 
         TrySelectingNewSlot(card, Player, Opponent);
+        
         switch (card.CurrentState)
         {
             case SlotType.Play:

@@ -36,12 +36,12 @@ public partial class StartMenu : Control
         if (checkButton.ButtonPressed)
         {
             scene.StartServer();
-            scene.GetNode<Control>("Client").QueueFree();
+            scene.GetNode<Node>("Client").QueueFree();
         }
         else
         {
             scene.StartClient();
-            scene.GetNode<Control>("Server").QueueFree();
+            scene.GetNode<Node>("Server").QueueFree();
         }
         Hide();
         ProcessMode = ProcessModeEnum.Disabled;

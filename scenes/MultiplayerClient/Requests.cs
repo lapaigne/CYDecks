@@ -63,4 +63,15 @@ partial class MultiplayerClient
 
         return deck;
     }
+
+    public void EndMatch(int match_id)
+    {
+        var query =
+            @$"
+        UPDATE cydecks_db.matches SET finished = 1 WHERE id = ${match_id}; 
+        ";
+
+        var command = new MySqlCommand(query, dbConnection.Connection);
+        command.ExecuteNonQuery();
+    }
 }

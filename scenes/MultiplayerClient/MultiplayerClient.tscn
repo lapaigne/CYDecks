@@ -6,15 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://11oj1tawurep" path="res://scenes/CardManager/CardManager.tscn" id="4_lolda"]
 [ext_resource type="PackedScene" uid="uid://c2lnvndjftcpp" path="res://scenes/Debug/Debug.tscn" id="5_ptpj2"]
 
-[node name="MultiplayerClient" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="MultiplayerClient" type="Node"]
 script = ExtResource("1_2c4nq")
 
-[node name="Client" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 320.0
-offset_bottom = 180.0
+[node name="Client" type="Node" parent="."]
 
 [node name="BoardSprite" type="Sprite2D" parent="Client"]
 texture_repeat = 2
@@ -31,10 +26,8 @@ editor_draw_limits = true
 
 [node name="Debug" parent="Client" instance=ExtResource("5_ptpj2")]
 visible = false
-layout_mode = 1
 
 [node name="StandBtn" type="Button" parent="Client"]
-layout_mode = 0
 offset_left = 200.0
 offset_top = 73.0
 offset_right = 270.0
@@ -42,20 +35,15 @@ offset_bottom = 104.0
 text = "ХВАТИТ"
 
 [node name="MoreBtn" type="Button" parent="Client"]
-layout_mode = 0
 offset_left = 63.0
 offset_top = 73.0
 offset_right = 120.0
 offset_bottom = 104.0
 text = "ЕЩЕ"
 
-[node name="Server" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 320.0
-offset_bottom = 180.0
+[node name="Server" type="Node" parent="."]
 
 [node name="Connect" type="Button" parent="Server"]
-layout_mode = 0
 offset_left = 277.0
 offset_top = 9.0
 offset_right = 308.0
