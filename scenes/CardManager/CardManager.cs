@@ -57,7 +57,7 @@ public partial class CardManager : Area2D
         }
     }
 
-    public bool TrySelectingNewSlot(Card card, PlayerData player, PlayerData opponent)
+    public bool TrySelectingNewSlot(Card card, PlayerData player = null, PlayerData opponent = null)
     {
         if (card.NextState != SlotType.None)
         {

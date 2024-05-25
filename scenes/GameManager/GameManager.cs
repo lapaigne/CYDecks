@@ -21,11 +21,12 @@ public partial class GameManager : Node2D
 
         cardManager.PlayerDeck = new Queue<Card>();
         cardManager.OpponentDeck = new Queue<Card>();
-        var rnd = new RandomNumberGenerator();
-
-        for (int i = 0; i < 1; i++)
+        // var rnd = new RandomNumberGenerator();
+        var list = new List<int>();
+        // for (int i = 0; i < 1; i++)
+        foreach (var number in list)
         {
-            var number = rnd.RandiRange(0, 19);
+            // var number = rnd.RandiRange(0, 19);
             switch (number)
             {
                 case 0:

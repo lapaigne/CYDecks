@@ -29,7 +29,6 @@ public partial class Card : CharacterBody2D
     {
         GetNode<AnimatedSprite2D>("AnimatedSprite2D").Frame = Data.Id;
     }
-
     public override void _Process(double delta)
     {
         TryMoving(delta);
@@ -64,7 +63,6 @@ public partial class Card : CharacterBody2D
 
     public void OnMouseEntered()
     {
-        GD.Print("in");
         hasMouse = true;
     }
 

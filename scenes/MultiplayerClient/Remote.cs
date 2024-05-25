@@ -12,4 +12,11 @@ partial class MultiplayerClient
             return;
         }
     }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
+    private void MoveCard(Card card)
+    {
+        var manager = GetNode<CardManager>("CardManager");
+        manager.TrySelectingNewSlot(card);
+    }
 }
