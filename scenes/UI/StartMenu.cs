@@ -35,13 +35,13 @@ public partial class StartMenu : Control
 
         if (checkButton.ButtonPressed)
         {
-            scene.StartServer();
             scene.GetNode<Node>("Client").QueueFree();
+            scene.StartServer();
         }
         else
         {
-            scene.StartClient();
             scene.GetNode<Node>("Server").QueueFree();
+            scene.StartClient();
         }
         Hide();
         ProcessMode = ProcessModeEnum.Disabled;
