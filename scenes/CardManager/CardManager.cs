@@ -7,46 +7,41 @@ using Godot;
 
 public partial class CardManager : Area2D
 {
-    public Queue<Card> PlayerDeck;
-    public Queue<Card> OpponentDeck;
-    public PlayerData Player;
-    public PlayerData Opponent;
     private PackedScene cardScene;
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         cardScene = GD.Load<PackedScene>("res://scenes/Card/Card.tscn");
-        foreach (Card card in PlayerDeck)
-        {
-            AddCard(card);
-        }
+
+        var slots = GetNode<Node2D>("SlotArray").GetChildren().OfType<Slot>();
+        foreach (var slot in slots) { }
     }
 
-    public override void _PhysicsProcess(double delta) { }
-
-    public void AddCard(Card card)
+    public Card AddCard(Card card)
     {
         var instance = (Card)cardScene.Instantiate();
+        instance.OwnerId = card.OwnerId == GetNode<MultiplayerClient>("../..").ClientId ? 0 : 1;
         instance.CurrentState = card.CurrentState;
         instance.Data = card.Data;
-        instance.Position = GetNode<Slot>("SlotArray/PDraw").Position;
+        instance.Position =
+            (instance.OwnerId == 0)
+            ? GetNode<Slot>("SlotArray/PDraw").Position
+            : GetNode<Slot>("SlotArray/ODraw").Position;
 
         instance.OnCardClick += OnCardClick;
 
         AddChild(instance);
+        return instance;
     }
 
     private void OnCardClick(Card card)
     {
-        GD.Print($"Clicked: {card.Data.Id}");
-        GD.Print($"Current: {card.CurrentState}");
-        GD.Print($"Next: {card.NextState}");
-        GD.Print($"Locked: {card.Data.Locked}");
-        GD.Print($"Destroy: {card.Data.Destroy}\n");
+        TrySelectingNewSlot(
+            card,
+            GetNode<MultiplayerClient>("../..").Player,
+            GetNode<MultiplayerClient>("../..").Opponent
+        );
 
-        TrySelectingNewSlot(card, Player, Opponent);
-        
         switch (card.CurrentState)
         {
             case SlotType.Play:
@@ -59,6 +54,13 @@ public partial class CardManager : Area2D
 
     public bool TrySelectingNewSlot(Card card, PlayerData player = null, PlayerData opponent = null)
     {
+        // GD.Print(card.GlobalPosition);
+        // GD.Print($"\n\n---\nClicked: {card.Data.Id}");
+        // GD.Print($"Current: {card.CurrentState}");
+        // GD.Print($"Next: {card.NextState}");
+        // GD.Print($"Locked: {card.Data.Locked}");
+        // GD.Print($"Destroy: {card.Data.Destroy}");
+
         if (card.NextState != SlotType.None)
         {
             return false;
@@ -90,7 +92,7 @@ public partial class CardManager : Area2D
                 var leftInDrawPile = GetNode<Node2D>("SlotArray")
                     .GetChildren()
                     .OfType<Card>()
-                    .Where(_card => _card.OwnerId == card.OwnerId || card.OwnerId == -1)
+                    .Where(_card => _card.OwnerId == card.OwnerId)
                     .Where(_card => _card.CurrentState == SlotType.Draw)
                     .Count();
 
@@ -112,12 +114,15 @@ public partial class CardManager : Area2D
                     card.Slot = slots[0];
                     slots[0].isOccupied = true;
                     card.NextState = SlotType.Play;
+                    GD.Print("suc");
+                    GD.Print(card.Slot);
                 }
+                GD.Print(slots.Count);
                 break;
             default:
                 return false;
         }
-
+        GD.Print($"{card.NextState}");
         return true;
     }
 
@@ -137,7 +142,11 @@ public partial class CardManager : Area2D
         var list = GetChildren().OfType<Card>().ToList();
         foreach (var card in list)
         {
-            TrySelectingNewSlot(card, Player, Opponent);
+            TrySelectingNewSlot(
+                card,
+                GetParent<MultiplayerClient>().Player,
+                GetParent<MultiplayerClient>().Opponent
+            );
         }
     }
 }
