@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 partial class MultiplayerClient
@@ -13,10 +14,20 @@ partial class MultiplayerClient
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    private void MoveCard(Card card)
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void MoveCards()
     {
-        var manager = GetNode<CardManager>("CardManager");
-        manager.TrySelectingNewSlot(card);
+        if (!Multiplayer.IsServer())
+        {
+            var manager = GetNode<CardManager>("Client/CardManager");
+
+            foreach (var card in TotalList)
+            {
+                if (!manager.TrySelectingNewSlot(card, Player, Opponent))
+                {
+                    // throw new Exception();
+                }
+            }
+        }
     }
 }

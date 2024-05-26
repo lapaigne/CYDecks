@@ -1,24 +1,19 @@
 using Godot;
 using MySqlConnector;
 
-public enum ActionMode
-{
-    Stand,
-    More
-}
-
 public partial class MultiplayerClient : Node
 {
-    private ENetMultiplayerPeer peer;
-    private int port;
-    private string address;
-    private DBConnection dbConnection;
-
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready() { }
+    public override void _Ready()
+    {
+        var serverNode = GetNode("Server");
+        serverNode.GetNode<Button>("MoveCards").Pressed += OnMoveBtnPressed;
+        serverNode.GetNode<Button>("Connect").Pressed += OnDBConnectBtnPressed;
+    }
 
     public void StartClient()
     {
+        ClientId = 1;
         address = "127.0.0.1";
 
         port = 9999;
@@ -29,6 +24,8 @@ public partial class MultiplayerClient : Node
         Multiplayer.MultiplayerPeer = peer;
 
         GD.Print("Trying to connect...");
+
+        SetGameData();
     }
 
     public void StartServer()
@@ -92,9 +89,15 @@ public partial class MultiplayerClient : Node
         DBConnect();
     }
 
+    public void OnMoveBtnPressed()
+    {
+        Rpc(nameof(MoveCards));
+    }
+
     public void OnStandBtnPressed()
     {
         RpcId(1, nameof(SendAction), (int)ActionMode.Stand);
+        MoveCards();
     }
 
     public void OnMoreBtnPressed()
