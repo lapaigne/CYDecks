@@ -1,6 +1,8 @@
 using System;
 using Godot;
-
+/// <summary>
+/// Возможные типы слотов. Используется также как состояние карты <c>CurrentState</c> или <c>NextState</c>
+/// </summary>
 public enum SlotType
 {
     None,

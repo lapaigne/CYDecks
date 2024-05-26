@@ -1,4 +1,3 @@
-using Godot;
 using MySqlConnector;
 
 partial class DBConnection

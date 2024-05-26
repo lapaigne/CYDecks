@@ -19,19 +19,24 @@ public partial class Card : CharacterBody2D
 
     [Export]
     public int OwnerId;
-    public bool isMoving;
-    public bool hasMouse;
     public Slot Slot = null;
-    public double timeEnRoute;
+
+    private bool _hasMouse;
+    private double _timeEnRoute;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GetNode<AnimatedSprite2D>("AnimatedSprite2D").Frame = Data.Id;
+        GD.Print(GlobalPosition);
     }
-    public override void _Process(double delta)
+
+    public override void _PhysicsProcess(double delta)
     {
-        TryMoving(delta);
+        if (TryMoving(delta))
+        {
+            //
+        }
     }
 
     public bool TryMoving(double delta)
@@ -41,10 +46,10 @@ public partial class Card : CharacterBody2D
             return false;
         }
 
-        timeEnRoute += delta;
-        
+        _timeEnRoute += delta;
+
         Velocity = Slot.Position - GlobalPosition;
-        if (Velocity.Length() > 2 && timeEnRoute <= 0.1f)
+        if (Velocity.Length() > 2 && _timeEnRoute <= 0.1f)
         {
             Translate(Velocity * (float)delta / 0.05f);
         }
@@ -53,8 +58,7 @@ public partial class Card : CharacterBody2D
             GlobalPosition = Slot.Position;
             CurrentState = Slot.Type;
             NextState = SlotType.None;
-            isMoving = false;
-            timeEnRoute = 0;
+            _timeEnRoute = 0;
             return true;
         }
 
@@ -63,25 +67,25 @@ public partial class Card : CharacterBody2D
 
     public void OnMouseEntered()
     {
-        hasMouse = true;
+        _hasMouse = true;
     }
 
     public void OnMouseExited()
     {
-        hasMouse = false;
+        _hasMouse = false;
     }
 
     public void Destroy()
     {
         GD.Print("Card Destroyed");
-        // Visible = false;
+        Visible = false;
     }
 
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseButton inputEventMouseButton)
         {
-            if (inputEventMouseButton.Pressed && hasMouse)
+            if (inputEventMouseButton.Pressed && _hasMouse)
             {
                 GD.Print("clicked");
                 EmitSignal("OnCardClick", this);
